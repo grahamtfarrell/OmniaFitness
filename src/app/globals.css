@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* GT Pressura Mono Font Family */
+@font-face {
+  font-family: "GT Pressura Mono";
+  src: url("/fonts/GT-Pressura-Mono-Light.otf") format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GT Pressura Mono";
+  src: url("/fonts/GT-Pressura-Mono-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GT Pressura Mono";
+  src: url("/fonts/GT-Pressura-Mono-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --pink-primary: #fbccf2;
+  --background: #ffffff;
+  --foreground: #000000;
+  --font-gt-pressura: "GT Pressura Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Marquee animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+/* Custom button styles */
+.btn-outline {
+  @apply border-2 border-white rounded-button px-8 py-4 font-mono text-white 
+         hover:bg-white hover:text-black transition-all duration-300;
+}
+
+.btn-outline-dark {
+  @apply border-2 border-black rounded-button px-8 py-4 font-mono text-black 
+         hover:bg-black hover:text-white transition-all duration-300;
+}
+
+/* Section divider */
+.section-divider {
+  @apply w-full h-px bg-black;
+}
