@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 import FadeIn from "./FadeIn";
+import Proximate from "@/components/variable-proximity/Proximate";
 
 // Placeholder products - will be replaced with Shopify data
 const products = [
@@ -81,7 +82,9 @@ export default function ShopSection() {
       {/* Section Header */}
       <div className="px-6 mb-8">
         <FadeIn>
-          <h2 className="text-black text-2xl md:text-3xl font-mono tracking-wide">Join the crew</h2>
+          <h2 className="text-black text-2xl md:text-3xl font-mono tracking-wide">
+            <Proximate>Join the crew</Proximate>
+          </h2>
         </FadeIn>
       </div>
 
@@ -103,7 +106,7 @@ export default function ShopSection() {
             {product.isNew && (
               <div className="flex justify-center mb-2">
                 <span className="bg-[#FBCCF2] text-black text-xs font-mono px-2 py-0.5">
-                  shirt
+                  <Proximate>shirt</Proximate>
                 </span>
               </div>
             )}
@@ -119,7 +122,7 @@ export default function ShopSection() {
 
             {/* Product Price */}
             <p className="text-black text-sm font-mono">
-              $ {product.price.toFixed(2)}
+              <Proximate>{`$ ${product.price.toFixed(2)}`}</Proximate>
             </p>
           </a>
         ))}

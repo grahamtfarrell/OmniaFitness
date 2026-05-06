@@ -2,9 +2,12 @@
 
 import { createContext, useContext, useState, ReactNode } from "react";
 
+export type BookingFlow = "book-intro" | "talk-coach";
+
 interface BookingContextType {
   isOpen: boolean;
-  openModal: () => void;
+  flow: BookingFlow;
+  openModal: (flow?: BookingFlow) => void;
   closeModal: () => void;
 }
 
@@ -12,12 +15,18 @@ const BookingContext = createContext<BookingContextType | undefined>(undefined);
 
 export function BookingProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [flow, setFlow] = useState<BookingFlow>("book-intro");
 
-  const openModal = () => setIsOpen(true);
+  const openModal = (nextFlow?: BookingFlow) => {
+    const resolved: BookingFlow =
+      nextFlow === "talk-coach" ? "talk-coach" : "book-intro";
+    setFlow(resolved);
+    setIsOpen(true);
+  };
   const closeModal = () => setIsOpen(false);
 
   return (
-    <BookingContext.Provider value={{ isOpen, openModal, closeModal }}>
+    <BookingContext.Provider value={{ isOpen, flow, openModal, closeModal }}>
       {children}
     </BookingContext.Provider>
   );

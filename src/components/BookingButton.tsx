@@ -1,17 +1,23 @@
 "use client";
 
-import { useBooking } from "@/context/BookingContext";
+import { useBooking, type BookingFlow } from "@/context/BookingContext";
 
 interface BookingButtonProps {
   children: React.ReactNode;
   className?: string;
+  /** Defaults to book intro (email + list). Use `talk-coach` for the coach contact form. */
+  flow?: BookingFlow;
 }
 
-export default function BookingButton({ children, className }: BookingButtonProps) {
+export default function BookingButton({
+  children,
+  className,
+  flow = "book-intro",
+}: BookingButtonProps) {
   const { openModal } = useBooking();
 
   return (
-    <button onClick={openModal} className={className}>
+    <button type="button" onClick={() => openModal(flow)} className={className}>
       {children}
     </button>
   );

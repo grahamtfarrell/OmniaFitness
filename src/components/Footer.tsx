@@ -1,80 +1,55 @@
 import Image from "next/image";
+import Proximate from "@/components/variable-proximity/Proximate";
+
+const MAPS_URL =
+  "https://www.google.com/maps/search/?api=1&query=901+S+Jason+St+%23C+Denver+CO+80223";
+
+const footerLinks = [
+  { label: "Contact", href: "mailto:jason@omniafitness.com" },
+  { label: "Hours", href: MAPS_URL },
+  { label: "Location", href: MAPS_URL },
+  { label: "Join newsletter", href: "#newsletter" },
+] as const;
 
 export default function Footer() {
   return (
-    <footer 
-      className="text-white py-12 px-6 min-h-[500px]"
-      style={{
-        backgroundImage: "url('/bottom.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="max-w-xl mx-auto text-center">
-        {/* Large Logo */}
-        <div className="flex justify-center mb-6">
+    <footer className="bg-black px-6 py-16 text-pink-primary md:py-20">
+      <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+        <div className="flex justify-center">
           <Image
-            src="/omnia-o.png"
+            src="/omnia-logo.png"
             alt="Omnia"
-            width={300}
-            height={300}
-            className="h-72 md:h-96 w-auto"
+            width={160}
+            height={48}
+            className="h-7 w-auto opacity-95 md:h-8"
           />
         </div>
 
-        {/* Contact */}
-        <div className="mb-4">
-          <div className="font-mono text-base flex justify-between items-end">
-            <span>Contact</span>
-            <span className="flex-1 border-b border-dotted border-white mx-2 mb-1"></span>
-            <span>jason@omniafitness.com</span>
-          </div>
-        </div>
+        <nav
+          className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 font-mono text-[0.65rem] uppercase tracking-[0.2em] md:text-xs md:tracking-[0.22em]"
+          aria-label="Footer"
+        >
+          {footerLinks.map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              className="transition-opacity hover:opacity-60"
+            >
+              <Proximate>{label}</Proximate>
+            </a>
+          ))}
+        </nav>
 
-        {/* Pricing */}
-        <div className="mb-4">
-          <div className="font-mono text-base flex justify-between items-end">
-            <span>Pricing</span>
-            <span className="flex-1 border-b border-dotted border-white mx-2 mb-1"></span>
-            <span>$420 /mo</span>
-          </div>
-        </div>
-
-        {/* Location */}
-        <div className="mb-4">
-          <div className="font-mono text-base flex justify-between items-end">
-            <span>Location</span>
-            <span className="flex-1 border-b border-dotted border-white mx-2 mb-1"></span>
-            <span>901 S Jason St # C, Denver, CO 80223</span>
-          </div>
-        </div>
-
-        {/* Hours */}
-        <div className="mb-6">
-          <div className="font-mono text-base flex justify-between items-end">
-            <span>Hours</span>
-            <span className="flex-1 border-b border-dotted border-white mx-2 mb-1"></span>
-            <span>9-5 M-S</span>
-          </div>
-        </div>
-
-        {/* Newsletter */}
-        <div className="mb-6">
-          <button className="border border-white px-6 py-3 font-mono text-base tracking-wide hover:bg-pink-primary hover:text-black hover:border-pink-primary transition-all duration-300">
-            subscribe to newsletter
-          </button>
-        </div>
-
-        {/* Bottom Icons */}
-        <div className="flex justify-center gap-6">
+        <div className="mt-10 flex justify-center gap-8 md:mt-12">
           <a
             href="https://twitter.com/omniafitness"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:opacity-70 transition-opacity"
+            className="text-pink-primary transition-opacity hover:opacity-60"
+            aria-label="X"
           >
             <svg
-              className="w-6 h-6 fill-white"
+              className="h-5 w-5 fill-current"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -85,10 +60,11 @@ export default function Footer() {
             href="https://youtube.com/@omniafitness"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:opacity-70 transition-opacity"
+            className="text-pink-primary transition-opacity hover:opacity-60"
+            aria-label="YouTube"
           >
             <svg
-              className="w-6 h-6 fill-white"
+              className="h-5 w-5 fill-current"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >
@@ -99,10 +75,11 @@ export default function Footer() {
             href="https://tiktok.com/@omniafitness"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:opacity-70 transition-opacity"
+            className="text-pink-primary transition-opacity hover:opacity-60"
+            aria-label="TikTok"
           >
             <svg
-              className="w-6 h-6 fill-white"
+              className="h-5 w-5 fill-current"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >

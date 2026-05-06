@@ -4,6 +4,7 @@ import Script from "next/script";
 import "./globals.css";
 import { BookingProvider } from "@/context/BookingContext";
 import BookingModal from "@/components/BookingModal";
+import { VariableProximityRoot } from "@/components/variable-proximity/VariableProximityRoot";
 
 const gruppo = Gruppo({
   weight: "400",
@@ -38,8 +39,10 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         <BookingProvider>
-          {children}
-          <BookingModal />
+          <VariableProximityRoot>
+            {children}
+            <BookingModal />
+          </VariableProximityRoot>
         </BookingProvider>
       </body>
     </html>

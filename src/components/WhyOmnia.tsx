@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import FadeIn from "./FadeIn";
+import Proximate from "@/components/variable-proximity/Proximate";
 
 export default function WhyOmnia() {
   return (
@@ -34,10 +35,14 @@ export default function WhyOmnia() {
         <div className="absolute right-12 md:right-24 top-1/2 -translate-y-1/2 max-w-xs md:max-w-sm">
           <FadeIn>
             <p className="text-white text-base md:text-lg font-mono leading-relaxed mb-6">
-              Since 2013, Omnia has been a place where we push ourselves to become someone we didn&apos;t know was possible before. A community training together and showing up for each other.
+              <Proximate>
+                {`Since 2013, Omnia has been a place where we push ourselves to become someone we didn't know was possible before. A community training together and showing up for each other.`}
+              </Proximate>
             </p>
             <p className="text-white text-base md:text-lg font-mono leading-relaxed">
-              Omnia isn&apos;t for everyone but could be everything for you.
+              <Proximate>
+                {`Omnia isn't for everyone but could be everything for you.`}
+              </Proximate>
             </p>
           </FadeIn>
         </div>

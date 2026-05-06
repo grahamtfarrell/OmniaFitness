@@ -1,3 +1,5 @@
+import Proximate from "@/components/variable-proximity/Proximate";
+
 export default function Marquee() {
   const text = "welcome to omnia. get it.";
 
@@ -10,7 +12,7 @@ export default function Marquee() {
             key={i}
             className="text-black text-[calc(1.125rem*0.75)] md:text-[calc(1.5rem*0.75)] font-mono tracking-wide mx-20"
           >
-            {text}
+            <Proximate>{text}</Proximate>
           </span>
         ))}
       </div>

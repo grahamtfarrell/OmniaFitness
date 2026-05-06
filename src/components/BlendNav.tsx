@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useBooking } from "@/context/BookingContext";
+import Proximate from "@/components/variable-proximity/Proximate";
 
 export default function BlendNav() {
   const { openModal } = useBooking();
@@ -24,13 +25,14 @@ export default function BlendNav() {
             href="/about" 
             className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
           >
-            [about]
+            <Proximate>[about]</Proximate>
           </Link>
-          <button 
-            onClick={openModal}
+          <button
+            type="button"
+            onClick={() => openModal("book-intro")}
             className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
           >
-            [book intro]
+            <Proximate>[book intro]</Proximate>
           </button>
           <a 
             href="https://omnia-fitness-collective.myshopify.com/"
@@ -38,7 +40,7 @@ export default function BlendNav() {
             rel="noopener noreferrer"
             className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
           >
-            [shop]
+            <Proximate>[shop]</Proximate>
           </a>
         </div>
       </div>
@@ -50,13 +52,14 @@ export default function BlendNav() {
             href="/about" 
             className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
           >
-            [about]
+            <Proximate>[about]</Proximate>
           </Link>
-          <button 
-            onClick={openModal}
+          <button
+            type="button"
+            onClick={() => openModal("book-intro")}
             className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
           >
-            [book intro]
+            <Proximate>[book intro]</Proximate>
           </button>
           <a 
             href="https://omnia-fitness-collective.myshopify.com/"
@@ -64,7 +67,7 @@ export default function BlendNav() {
             rel="noopener noreferrer"
             className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
           >
-            [shop]
+            <Proximate>[shop]</Proximate>
           </a>
         </div>
       </div>

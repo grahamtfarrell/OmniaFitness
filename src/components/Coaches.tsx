@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
+import Proximate from "@/components/variable-proximity/Proximate";
 
 type Coach = {
   id: string;
@@ -25,10 +26,11 @@ type CoachPhase =
   | "closing_fade_in"
   | "closing_slide_back";
 
-const D_SLIDE_MS = 520;
-const D_FADE_MS = 420;
-const D_BIO_MS = 320;
-const TIMEOUT_SLACK_MS = 90;
+/** Bio choreography — keep opacity transitions in markup aligned via these values + schedule() delays */
+const D_SLIDE_MS = 300;
+const D_FADE_MS = 200;
+const D_BIO_MS = 180;
+const TIMEOUT_SLACK_MS = 40;
 
 const COACHES: Coach[] = [
   {
@@ -164,8 +166,11 @@ export default function Coaches() {
 
   const transformTransitionStyle =
     phase === "opening_slide" || phase === "closing_slide_back"
-      ? `transform ${D_SLIDE_MS}ms ease-out`
+      ? `transform ${D_SLIDE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
       : "none";
+
+  const coachOpacityTransition = `opacity ${D_FADE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+  const bioOpacityTransition = `opacity ${D_BIO_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`;
 
   const openBio = (coachId: string) => {
     if (phase !== "idle") return;
@@ -243,11 +248,11 @@ export default function Coaches() {
         aria-busy={busy}
         className="flex flex-col px-6 [--coach-card:280px] md:[--coach-card:320px]"
       >
-        <div className="relative flex min-h-[520px] flex-1 flex-col md:min-h-[580px]">
-          <div className="relative min-h-0 flex-1">
+        <div className="relative flex flex-col">
+          <div className="relative min-h-0">
             <div
               ref={scrollRef}
-              className={`h-full min-h-0 pb-2 [&::-webkit-scrollbar]:hidden ${
+              className={`min-h-0 pb-2 [&::-webkit-scrollbar]:hidden ${
                 phase === "idle"
                   ? "overflow-x-auto"
                   : "overflow-x-hidden"
@@ -257,7 +262,7 @@ export default function Coaches() {
               <div
                 ref={trackRef}
                 role="list"
-                className="relative flex h-full w-max gap-6"
+                className="relative flex w-max gap-6"
                 style={{
                   transform: `translate3d(${trackTranslateX}px,0,0)`,
                   transition: transformTransitionStyle,
@@ -275,9 +280,10 @@ export default function Coaches() {
                         colRefs.current[index] = el;
                       }}
                       role="listitem"
-                      className={`flex w-[var(--coach-card)] flex-shrink-0 flex-col transition-opacity duration-[420ms] ease-out ${
+                      className={`flex w-[var(--coach-card)] flex-shrink-0 flex-col ${
                         dimOthers ? "pointer-events-none opacity-0" : ""
                       } ${selected && busy ? "relative z-20" : ""}`}
+                      style={{ transition: coachOpacityTransition }}
                     >
                       <div className="group relative aspect-square w-full overflow-hidden border border-black">
                         {!showNormal ? (
@@ -311,7 +317,7 @@ export default function Coaches() {
                       </div>
                       <div className="pt-3">
                         <h3 className="mb-3 font-mono text-base font-normal text-black md:text-lg">
-                          {coach.name}
+                          <Proximate>{coach.name}</Proximate>
                         </h3>
                         <button
                           type="button"
@@ -319,7 +325,7 @@ export default function Coaches() {
                           onClick={() => openBio(coach.id)}
                           className="rounded-lg border-2 border-black bg-white px-4 py-2 font-mono text-xs uppercase tracking-widest text-black transition-all duration-300 hover:border-pink-primary hover:bg-pink-primary hover:text-black disabled:pointer-events-none disabled:opacity-40"
                         >
-                          Read their Bio
+                          <Proximate>Read their Bio</Proximate>
                         </button>
                       </div>
                     </div>
@@ -330,11 +336,12 @@ export default function Coaches() {
 
             {activeCoach && (
               <div
-                className={`absolute inset-0 z-10 flex pl-[calc(var(--coach-card)+1.5rem)] transition-opacity duration-[320ms] ease-out md:pl-[calc(var(--coach-card)+1.5rem)] ${
+                className={`absolute inset-0 z-10 flex min-h-0 pl-[calc(var(--coach-card)+1.5rem)] md:pl-[calc(var(--coach-card)+1.5rem)] ${
                   bioVisible
                     ? "pointer-events-none opacity-100"
                     : "pointer-events-none opacity-0"
                 }`}
+                style={{ transition: bioOpacityTransition }}
               >
                 <div
                   className={`flex min-h-0 min-w-0 flex-1 flex-col pr-2 pt-1 ${
@@ -342,13 +349,13 @@ export default function Coaches() {
                   }`}
                 >
                   <h2 className="mb-3 shrink-0 font-mono text-lg font-normal text-black md:text-xl">
-                    {activeCoach.name}
+                    <Proximate>{activeCoach.name}</Proximate>
                   </h2>
                   <div
                     className={`min-h-0 flex-1 overflow-y-auto overscroll-contain pr-10 font-mono font-normal text-black ${bioFontClass(activeCoach.bio)}`}
                   >
                     <p className="whitespace-pre-line pb-4 pr-2">
-                      {activeCoach.bio}
+                      <Proximate>{activeCoach.bio}</Proximate>
                     </p>
                   </div>
                 </div>
@@ -357,7 +364,7 @@ export default function Coaches() {
           </div>
 
           {showProgress && (
-            <div className="mt-6 shrink-0">
+            <div className="mt-3 shrink-0">
               <div className="h-1 bg-black/20">
                 <div
                   className="h-1 bg-black transition-all duration-150"

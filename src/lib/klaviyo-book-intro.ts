@@ -154,6 +154,7 @@ export async function subscribeProfileToList(
   apiKey: string,
   listId: string,
   profileId: string,
+  email: string,
 ): Promise<{ ok: true } | { ok: false; status: number; body: unknown }> {
   const body = {
     data: {
@@ -166,6 +167,7 @@ export async function subscribeProfileToList(
               type: "profile",
               id: profileId,
               attributes: {
+                email,
                 subscriptions: {
                   email: {
                     marketing: {
@@ -235,11 +237,160 @@ export async function syncIntroLeadToKlaviyo(input: {
     profileId = existingId;
   }
 
-  const sub = await subscribeProfileToList(apiKey, listId, profileId);
+  const sub = await subscribeProfileToList(
+    apiKey,
+    listId,
+    profileId,
+    input.email,
+  );
   if (!sub.ok) {
     return {
       ok: false,
       message: formatKlaviyoError(sub.status, sub.body),
+    };
+  }
+
+  return { ok: true };
+}
+
+/** Talk to a Coach — phone-first profile, custom property, add to list (no email marketing job). */
+
+export async function createCoachProfile(
+  apiKey: string,
+  input: {
+    firstName: string;
+    lastName: string;
+    phoneE164: string;
+    favoriteAnimal: string;
+  },
+): Promise<{ ok: true; profileId: string } | { ok: false; status: number; body: unknown }> {
+  const body = {
+    data: {
+      type: "profile",
+      attributes: {
+        first_name: input.firstName,
+        last_name: input.lastName,
+        phone_number: input.phoneE164,
+        properties: {
+          favorite_animal: input.favoriteAnimal,
+        },
+      },
+    },
+  };
+  const { ok, status, data } = await klaviyoJson<ProfileCreateResponse>(
+    apiKey,
+    "/api/profiles",
+    { method: "POST", body: JSON.stringify(body) },
+  );
+  if (ok && data?.data?.id) return { ok: true, profileId: data.data.id };
+  return { ok: false, status, body: data };
+}
+
+export async function findProfileIdByPhone(
+  apiKey: string,
+  phoneE164: string,
+): Promise<string | null> {
+  const escaped = phoneE164.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  const filter = `equals(phone_number,"${escaped}")`;
+  const q = new URLSearchParams({ filter });
+  const { ok, data } = await klaviyoJson<ProfilesListResponse>(
+    apiKey,
+    `/api/profiles?${q.toString()}`,
+    { method: "GET" },
+  );
+  if (!ok || !data?.data?.length) return null;
+  const id = data.data[0]?.id;
+  return id ?? null;
+}
+
+export async function updateCoachProfile(
+  apiKey: string,
+  profileId: string,
+  input: {
+    firstName: string;
+    lastName: string;
+    phoneE164: string;
+    favoriteAnimal: string;
+  },
+): Promise<{ ok: true } | { ok: false; status: number; body: unknown }> {
+  const body = {
+    data: {
+      type: "profile",
+      id: profileId,
+      attributes: {
+        first_name: input.firstName,
+        last_name: input.lastName,
+        phone_number: input.phoneE164,
+        properties: {
+          favorite_animal: input.favoriteAnimal,
+        },
+      },
+    },
+  };
+  const { ok, status, data } = await klaviyoJson<unknown>(
+    apiKey,
+    `/api/profiles/${profileId}`,
+    { method: "PATCH", body: JSON.stringify(body) },
+  );
+  if (ok) return { ok: true };
+  return { ok: false, status, body: data };
+}
+
+export async function addProfileIdsToList(
+  apiKey: string,
+  listId: string,
+  profileIds: string[],
+): Promise<{ ok: true } | { ok: false; status: number; body: unknown }> {
+  const body = {
+    data: profileIds.map((id) => ({ type: "profile" as const, id })),
+  };
+  const { ok, status, data } = await klaviyoJson<unknown>(
+    apiKey,
+    `/api/lists/${listId}/relationships/profiles`,
+    { method: "POST", body: JSON.stringify(body) },
+  );
+  if (ok && status === 204) return { ok: true };
+  return { ok: false, status, body: data };
+}
+
+export async function syncCoachLeadToKlaviyo(input: {
+  apiKey: string;
+  listId: string;
+  firstName: string;
+  lastName: string;
+  phoneE164: string;
+  favoriteAnimal: string;
+}): Promise<{ ok: true } | { ok: false; message: string }> {
+  const { apiKey, listId } = input;
+
+  const created = await createCoachProfile(apiKey, input);
+  let profileId: string | null = null;
+
+  if (created.ok) {
+    profileId = created.profileId;
+  } else {
+    const existingId = await findProfileIdByPhone(apiKey, input.phoneE164);
+    if (!existingId) {
+      return {
+        ok: false,
+        message: formatKlaviyoError(created.status, created.body),
+      };
+    }
+    const updated = await updateCoachProfile(apiKey, existingId, input);
+    if (!updated.ok) {
+      return {
+        ok: false,
+        message: formatKlaviyoError(updated.status, updated.body),
+      };
+    }
+    profileId = existingId;
+  }
+
+  const added = await addProfileIdsToList(apiKey, listId, [profileId]);
+  if (!added.ok) {
+    return {
+      ok: false,
+      message: formatKlaviyoError(added.status, added.body),
     };
   }
 

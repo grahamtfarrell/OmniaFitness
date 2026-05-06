@@ -21,8 +21,8 @@ export default function Home() {
       <SplitSection />
       <Coaches />
       <WhyOmnia />
-      <Pricing />
       <ShopSection />
+      <Pricing />
       <Footer />
     </main>
   );
