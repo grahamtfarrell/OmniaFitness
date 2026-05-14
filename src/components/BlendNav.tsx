@@ -34,7 +34,7 @@ export default function BlendNav() {
         >
           <Link
             href="/about"
-            className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
+            className="text-base font-mono tracking-wide text-white transition-colors duration-300 hover:text-pink-primary"
           >
             <Proximate>[about]</Proximate>
           </Link>
@@ -42,7 +42,7 @@ export default function BlendNav() {
             href="https://omnia-fitness-collective.myshopify.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
+            className="text-base font-mono tracking-wide text-white transition-colors duration-300 hover:text-pink-primary"
           >
             <Proximate>[shop]</Proximate>
           </a>
@@ -61,13 +61,10 @@ export default function BlendNav() {
           bottom: "max(1rem, env(safe-area-inset-bottom, 0px))",
         }}
       >
-        <div
-          className="flex items-center gap-3"
-          style={{ mixBlendMode: "difference" }}
-        >
+        <div className="flex items-center gap-3">
           <Link
             href="/about"
-            className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
+            className="mix-blend-difference text-base font-mono tracking-wide text-white transition-opacity duration-300 hover:opacity-70"
           >
             <Proximate>[about]</Proximate>
           </Link>
@@ -75,7 +72,7 @@ export default function BlendNav() {
             href="https://omnia-fitness-collective.myshopify.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
+            className="mix-blend-difference text-base font-mono tracking-wide text-white transition-opacity duration-300 hover:opacity-70"
           >
             <Proximate>[shop]</Proximate>
           </a>
