@@ -93,9 +93,10 @@ export default function ShopSection() {
       </div>
 
       {/* Product Cards - Horizontal Scroll */}
-      <div 
+      <div
         ref={scrollRef}
-        className="flex gap-4 overflow-x-auto px-6 pb-4"
+        data-lenis-prevent-touch
+        className="flex touch-pan-x gap-4 overflow-x-auto px-6 pb-4 [&::-webkit-scrollbar]:hidden"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <StaggerList as="div" className="flex gap-4" staggerMs={36} durationMs={340}>

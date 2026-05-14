@@ -9,6 +9,9 @@ import MaskIn from "./MaskIn";
 import Proximate from "@/components/variable-proximity/Proximate";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
+const SERVICES_BRACKET =
+  "[CrossFit, Functional Fitness, Hyrox, Personal Training, Performance Driven Results]";
+
 export default function Hero() {
   const bgRef = useRef<HTMLDivElement>(null);
   const reduced = usePrefersReducedMotion();
@@ -73,29 +76,35 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15" />
       </div>
 
-      <div className="relative z-10 flex h-full min-h-0 flex-col text-left">
-        <div className="min-h-0 flex-1" aria-hidden />
-        <div className="flex min-h-0 flex-1 flex-col justify-start px-[calc(2rem*0.4)] pb-28 pt-[15vh] md:px-[calc(4rem*0.4)] md:pb-32 lg:px-[calc(6rem*0.4)] xl:px-[calc(8rem*0.4)]">
-          <MaskIn className="mb-3 md:mb-4">
-            <h1 className="whitespace-nowrap font-mono text-[clamp(calc(1.125rem*0.8),calc((100vw-3.2rem)/14*0.8),calc(3.75rem*1.35*0.8))] leading-tight tracking-tight text-white">
+      <div className="relative z-10 flex h-full min-h-0 flex-col">
+        <div className="min-h-0 flex-1 max-md:hidden" aria-hidden />
+        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 px-6 pb-32 pt-20 text-center max-md:pt-16 md:items-start md:justify-start md:px-[calc(4rem*0.4)] md:pb-32 md:pt-[15vh] md:text-left lg:px-[calc(6rem*0.4)] xl:px-[calc(8rem*0.4)]">
+          <MaskIn className="w-full md:mb-4">
+            <h1 className="font-mono leading-[1.08] tracking-tight text-white max-md:px-1 max-md:text-[clamp(2.5rem,11vw,4.25rem)] md:whitespace-nowrap md:text-[clamp(calc(1.125rem*0.8),calc((100vw-3.2rem)/14*0.8),calc(3.75rem*1.35*0.8))]">
               <Proximate>Show up. Be real. Get strong.</Proximate>
             </h1>
           </MaskIn>
 
           <FadeIn>
-            <BookingButton>
-              <Proximate>Book Intro</Proximate>
-            </BookingButton>
+            <div className="flex w-full justify-center md:justify-start">
+              <BookingButton>
+                <Proximate>Book Intro</Proximate>
+              </BookingButton>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={120} className="w-full max-w-[min(100%,20rem)] px-1 md:hidden">
+            <p className="text-balance text-center font-mono text-[0.5625rem] font-normal leading-snug tracking-wide text-white/95 [paint-order:stroke_fill] [-webkit-text-stroke:0.4px_#fff] sm:text-[0.625rem]">
+              <Proximate>{SERVICES_BRACKET}</Proximate>
+            </p>
           </FadeIn>
         </div>
 
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 px-[calc(2rem*0.4)] pb-10 md:px-[calc(4rem*0.4)] md:pb-14 lg:px-[calc(6rem*0.4)] xl:px-[calc(8rem*0.4)]">
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 hidden px-[calc(4rem*0.4)] pb-14 md:block lg:px-[calc(6rem*0.4)] xl:px-[calc(8rem*0.4)]">
           <FadeIn delay={150}>
             <div className="pointer-events-auto max-w-full w-full overflow-x-auto overflow-y-hidden [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <p className="whitespace-nowrap text-left font-mono text-xs font-normal leading-none tracking-wide text-white/95 [paint-order:stroke_fill] [-webkit-text-stroke:0.55px_#fff] md:text-sm">
-                <Proximate>
-                  [CrossFit, Functional Fitness, Hyrox, Personal Training, Performance Driven Results]
-                </Proximate>
+                <Proximate>{SERVICES_BRACKET}</Proximate>
               </p>
             </div>
           </FadeIn>

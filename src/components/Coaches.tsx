@@ -311,7 +311,8 @@ export default function Coaches() {
           >
             <div
               ref={scrollRef}
-              className={`min-h-0 pb-2 [&::-webkit-scrollbar]:hidden ${
+              data-lenis-prevent-touch
+              className={`touch-pan-x min-h-0 pb-2 [&::-webkit-scrollbar]:hidden ${
                 phase === "idle"
                   ? "overflow-x-auto"
                   : "overflow-x-hidden overflow-y-hidden"
