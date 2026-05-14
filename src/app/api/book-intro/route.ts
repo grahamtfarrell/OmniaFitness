@@ -3,8 +3,10 @@ import {
   normalizePhoneToE164,
   syncIntroLeadToKlaviyo,
 } from "@/lib/klaviyo-book-intro";
+import { isValidContactInterest } from "@/lib/contact-interest-options";
 
 const MAX_LEN = 200;
+const NOTES_MAX = 2500;
 
 function isNonEmptyString(v: unknown): v is string {
   return typeof v === "string" && v.trim().length > 0;
@@ -38,7 +40,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const { firstName, lastName, email, phone } = body as Record<
+  const { firstName, lastName, email, phone, interest, notes } = body as Record<
     string,
     unknown
   >;
@@ -75,6 +77,30 @@ export async function POST(request: Request) {
     );
   }
 
+  if (!isNonEmptyString(interest) || !isValidContactInterest(interest.trim())) {
+    return NextResponse.json(
+      { ok: false, error: "Please choose what you are interested in." },
+      { status: 400 },
+    );
+  }
+
+  let notesTrimmed = "";
+  if (notes !== undefined && notes !== null) {
+    if (typeof notes !== "string") {
+      return NextResponse.json(
+        { ok: false, error: "Notes must be text." },
+        { status: 400 },
+      );
+    }
+    if (notes.length > NOTES_MAX) {
+      return NextResponse.json(
+        { ok: false, error: `Notes must be ${NOTES_MAX} characters or fewer.` },
+        { status: 400 },
+      );
+    }
+    notesTrimmed = notes.trim();
+  }
+
   const phoneE164 = normalizePhoneToE164(phone);
   if (!phoneE164) {
     return NextResponse.json(
@@ -87,6 +113,13 @@ export async function POST(request: Request) {
     );
   }
 
+  const properties: Record<string, string> = {
+    omnia_interest: interest.trim(),
+  };
+  if (notesTrimmed) {
+    properties.omnia_life_notes = notesTrimmed;
+  }
+
   const result = await syncIntroLeadToKlaviyo({
     apiKey,
     listId,
@@ -94,6 +127,7 @@ export async function POST(request: Request) {
     firstName: firstName.trim(),
     lastName: lastName.trim(),
     phoneE164,
+    properties,
   });
 
   if (!result.ok) {

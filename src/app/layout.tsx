@@ -1,9 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
 import { Gruppo } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { BookingProvider } from "@/context/BookingContext";
+import { NewsletterBannerProvider } from "@/context/NewsletterBannerContext";
 import BookingModal from "@/components/BookingModal";
+import SmoothScroll from "@/components/SmoothScroll";
+import WelcomeModal from "@/components/WelcomeModal";
 import { VariableProximityRoot } from "@/components/variable-proximity/VariableProximityRoot";
 
 const gruppo = Gruppo({
@@ -18,6 +22,10 @@ export const metadata: Metadata = {
     "Your goals. Your lifestyle. Omnia - A CrossFit gym dedicated to helping you achieve your fitness goals.",
 };
 
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -26,6 +34,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${gruppo.variable} font-mono antialiased`}>
+        <SmoothScroll>
         <Script
           id="klaviyo-init"
           strategy="afterInteractive"
@@ -40,10 +49,16 @@ export default function RootLayout({
         />
         <BookingProvider>
           <VariableProximityRoot>
-            {children}
-            <BookingModal />
+            <NewsletterBannerProvider>
+              {children}
+              <Suspense fallback={null}>
+                <WelcomeModal />
+              </Suspense>
+              <BookingModal />
+            </NewsletterBannerProvider>
           </VariableProximityRoot>
         </BookingProvider>
+        </SmoothScroll>
       </body>
     </html>
   );

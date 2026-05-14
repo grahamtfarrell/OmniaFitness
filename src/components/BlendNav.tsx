@@ -1,40 +1,44 @@
 "use client";
 
+import MagneticButton from "@/components/MagneticButton";
 import Link from "next/link";
 import { useBooking } from "@/context/BookingContext";
+import { NEWSLETTER_LAYOUT, useNewsletterBanner } from "@/context/NewsletterBannerContext";
 import Proximate from "@/components/variable-proximity/Proximate";
+
+const bookIntroBtnClass =
+  "rounded-lg border border-black bg-pink-primary px-4 py-2 font-mono text-sm text-black tracking-wide transition-colors duration-300 hover:bg-transparent";
 
 export default function BlendNav() {
   const { openModal } = useBooking();
+  const { bannerVisible } = useNewsletterBanner();
+  const navTopPx = bannerVisible
+    ? NEWSLETTER_LAYOUT.navTop.withBanner
+    : NEWSLETTER_LAYOUT.navTop.withoutBanner;
 
   return (
     <>
       {/* Desktop Nav - Fixed top left */}
       <div
+        className="hidden md:flex fixed items-center gap-3"
         style={{
-          position: "fixed",
-          top: "72px",
+          top: `${navTopPx}px`,
           left: "24px",
           zIndex: 9998,
-          mixBlendMode: "difference",
+          transition: "top 0.45s cubic-bezier(0.32, 0.72, 0, 1)",
         }}
-        className="hidden md:block"
       >
-        <div className="flex items-center gap-3">
-          <Link 
-            href="/about" 
+        <div
+          className="flex items-center gap-3"
+          style={{ mixBlendMode: "difference" }}
+        >
+          <Link
+            href="/about"
             className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
           >
             <Proximate>[about]</Proximate>
           </Link>
-          <button
-            type="button"
-            onClick={() => openModal("book-intro")}
-            className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
-          >
-            <Proximate>[book intro]</Proximate>
-          </button>
-          <a 
+          <a
             href="https://omnia-fitness-collective.myshopify.com/"
             target="_blank"
             rel="noopener noreferrer"
@@ -43,25 +47,31 @@ export default function BlendNav() {
             <Proximate>[shop]</Proximate>
           </a>
         </div>
+        <MagneticButton onClick={() => openModal()} className={bookIntroBtnClass}>
+          <Proximate>[book intro]</Proximate>
+        </MagneticButton>
       </div>
 
       {/* Mobile Nav - Fixed bottom bar */}
-      <div className="md:hidden fixed bottom-4 left-4 right-4 z-[9998]" style={{ mixBlendMode: "difference" }}>
-        <div className="flex items-center justify-center gap-3">
-          <Link 
-            href="/about" 
+      <div
+        className="fixed z-[9998] flex items-center justify-center gap-3 md:hidden"
+        style={{
+          left: "max(1rem, env(safe-area-inset-left, 0px))",
+          right: "max(1rem, env(safe-area-inset-right, 0px))",
+          bottom: "max(1rem, env(safe-area-inset-bottom, 0px))",
+        }}
+      >
+        <div
+          className="flex items-center gap-3"
+          style={{ mixBlendMode: "difference" }}
+        >
+          <Link
+            href="/about"
             className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
           >
             <Proximate>[about]</Proximate>
           </Link>
-          <button
-            type="button"
-            onClick={() => openModal("book-intro")}
-            className="text-white text-base font-mono tracking-wide hover:text-pink-primary transition-colors duration-300"
-          >
-            <Proximate>[book intro]</Proximate>
-          </button>
-          <a 
+          <a
             href="https://omnia-fitness-collective.myshopify.com/"
             target="_blank"
             rel="noopener noreferrer"
@@ -70,6 +80,9 @@ export default function BlendNav() {
             <Proximate>[shop]</Proximate>
           </a>
         </div>
+        <MagneticButton onClick={() => openModal()} className={bookIntroBtnClass}>
+          <Proximate>[book intro]</Proximate>
+        </MagneticButton>
       </div>
     </>
   );

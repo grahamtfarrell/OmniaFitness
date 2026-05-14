@@ -2,12 +2,29 @@
 
 import Image from "next/image";
 import FadeIn from "./FadeIn";
+import MaskIn from "./MaskIn";
 import Proximate from "@/components/variable-proximity/Proximate";
+
+function WhyCopy() {
+  return (
+    <MaskIn>
+      <p className="mb-6 font-mono text-base leading-relaxed text-white md:text-lg">
+        <Proximate>
+          {`Since 2013, Omnia has been a place where we push ourselves to become someone we didn't know was possible before. A community training together and showing up for each other.`}
+        </Proximate>
+      </p>
+      <p className="font-mono text-base leading-relaxed text-white md:text-lg">
+        <Proximate>
+          {`Omnia isn't for everyone but could be everything for you.`}
+        </Proximate>
+      </p>
+    </MaskIn>
+  );
+}
 
 export default function WhyOmnia() {
   return (
-    <section className="relative w-full h-screen">
-      {/* Background Image */}
+    <section className="relative w-full min-h-[100dvh] md:h-screen md:min-h-0">
       <Image
         src="/fam.jpg"
         alt="Omnia family"
@@ -15,35 +32,44 @@ export default function WhyOmnia() {
         className="object-cover"
         priority
       />
-      
-      {/* Content Overlay */}
-      <div className="absolute inset-0">
-        {/* Left Side - Why Logo */}
-        <div className="absolute top-12 left-[15%] md:top-16 md:left-[22%]">
+
+      <div className="absolute inset-0 bg-black/20 md:bg-transparent" aria-hidden />
+
+      {/* Mobile: stacked under fixed logo */}
+      <div className="relative z-10 flex min-h-[100dvh] flex-col px-6 pb-16 pt-28 md:hidden">
+        <FadeIn>
+          <Image
+            src="/why.png"
+            alt="Why Omnia?"
+            width={300}
+            height={200}
+            className="h-auto w-[min(100%,220px)] object-contain"
+          />
+        </FadeIn>
+        <div className="mt-10 max-w-lg">
+          <FadeIn delay={80}>
+            <WhyCopy />
+          </FadeIn>
+        </div>
+      </div>
+
+      {/* Desktop: split layout */}
+      <div className="absolute inset-0 z-10 hidden md:block">
+        <div className="absolute left-[22%] top-16">
           <FadeIn>
             <Image
               src="/why.png"
               alt="Why Omnia?"
               width={300}
               height={200}
-              className="object-contain w-[200px] md:w-[300px]"
+              className="h-auto w-[300px] object-contain"
             />
           </FadeIn>
         </div>
-        
-        {/* Right Side - Text */}
-        <div className="absolute right-12 md:right-24 top-1/2 -translate-y-1/2 max-w-xs md:max-w-sm">
+
+        <div className="absolute right-24 top-1/2 max-w-sm -translate-y-1/2">
           <FadeIn>
-            <p className="text-white text-base md:text-lg font-mono leading-relaxed mb-6">
-              <Proximate>
-                {`Since 2013, Omnia has been a place where we push ourselves to become someone we didn't know was possible before. A community training together and showing up for each other.`}
-              </Proximate>
-            </p>
-            <p className="text-white text-base md:text-lg font-mono leading-relaxed">
-              <Proximate>
-                {`Omnia isn't for everyone but could be everything for you.`}
-              </Proximate>
-            </p>
+            <WhyCopy />
           </FadeIn>
         </div>
       </div>

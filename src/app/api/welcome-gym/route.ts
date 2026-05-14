@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import {
   normalizePhoneToE164,
-  syncCoachLeadToKlaviyo,
+  syncIntroLeadToKlaviyo,
 } from "@/lib/klaviyo-book-intro";
+import { splitDisplayName } from "@/lib/split-display-name";
 
 const MAX_LEN = 200;
 
@@ -12,11 +13,11 @@ function isNonEmptyString(v: unknown): v is string {
 
 export async function POST(request: Request) {
   const apiKey = process.env.KLAVIYO_PRIVATE_API_KEY;
-  const listId = process.env.KLAVIYO_COACH_LIST_ID;
+  const listId = process.env.KLAVIYO_LIST_ID;
 
   if (!apiKey || !listId) {
     return NextResponse.json(
-      { ok: false, error: "Server is missing Klaviyo coach list configuration." },
+      { ok: false, error: "Server is missing Klaviyo configuration." },
       { status: 503 },
     );
   }
@@ -38,32 +39,30 @@ export async function POST(request: Request) {
     );
   }
 
-  const { firstName, lastName, phone, favoriteAnimal } = body as Record<
-    string,
-    unknown
-  >;
+  const { name, email, phone } = body as Record<string, unknown>;
 
-  if (!isNonEmptyString(firstName) || firstName.trim().length > MAX_LEN) {
+  if (!isNonEmptyString(name) || name.trim().length > MAX_LEN) {
     return NextResponse.json(
-      { ok: false, error: "First name is required." },
+      { ok: false, error: "Name is required." },
       { status: 400 },
     );
   }
-  if (!isNonEmptyString(lastName) || lastName.trim().length > MAX_LEN) {
+  if (!isNonEmptyString(email) || email.length > MAX_LEN) {
     return NextResponse.json(
-      { ok: false, error: "Last name is required." },
+      { ok: false, error: "Email is required." },
+      { status: 400 },
+    );
+  }
+  const emailNorm = email.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailNorm)) {
+    return NextResponse.json(
+      { ok: false, error: "Please enter a valid email address." },
       { status: 400 },
     );
   }
   if (!isNonEmptyString(phone)) {
     return NextResponse.json(
       { ok: false, error: "Phone number is required." },
-      { status: 400 },
-    );
-  }
-  if (!isNonEmptyString(favoriteAnimal) || favoriteAnimal.length > MAX_LEN) {
-    return NextResponse.json(
-      { ok: false, error: "Favorite animal is required." },
       { status: 400 },
     );
   }
@@ -80,13 +79,20 @@ export async function POST(request: Request) {
     );
   }
 
-  const result = await syncCoachLeadToKlaviyo({
+  const nameTrim = name.trim();
+  const { firstName, lastName } = splitDisplayName(nameTrim);
+
+  const result = await syncIntroLeadToKlaviyo({
     apiKey,
     listId,
-    firstName: firstName.trim(),
-    lastName: lastName.trim(),
+    email: emailNorm,
+    firstName,
+    lastName,
     phoneE164,
-    favoriteAnimal: favoriteAnimal.trim(),
+    properties: {
+      omnia_source: "welcome_popup",
+      omnia_full_name: nameTrim,
+    },
   });
 
   if (!result.ok) {

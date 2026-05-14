@@ -7,7 +7,9 @@ import {
   useRef,
   useState,
 } from "react";
+import MagneticButton from "@/components/MagneticButton";
 import Proximate from "@/components/variable-proximity/Proximate";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 type Coach = {
   id: string;
@@ -26,11 +28,19 @@ type CoachPhase =
   | "closing_fade_in"
   | "closing_slide_back";
 
-/** Bio choreography — keep opacity transitions in markup aligned via these values + schedule() delays */
-const D_SLIDE_MS = 300;
-const D_FADE_MS = 200;
-const D_BIO_MS = 180;
-const TIMEOUT_SLACK_MS = 40;
+/** Bio choreography — overlapping beats (slide + peer fade + bio run together, not strictly serial) */
+const D_SLIDE_MS = 220;
+const D_FADE_MS = 130;
+const D_BIO_MS = 130;
+const TIMEOUT_SLACK_MS = 24;
+/** Start hiding peers this many ms after open (mid-slide). */
+const OPEN_PEER_FADE_AT_MS = 55;
+/** Start bio panel fade-in this many ms after open (overlaps slide + peer fade). */
+const OPEN_BIO_AT_MS = 75;
+/** Close: start bringing peers back mid bio-out. */
+const CLOSE_PEERS_IN_AT_MS = 55;
+/** Close: start slide-back before bio-out fully finishes. */
+const CLOSE_SLIDE_AT_MS = 85;
 
 const COACHES: Coach[] = [
   {
@@ -120,6 +130,7 @@ export default function Coaches() {
   const [bioCoachId, setBioCoachId] = useState<string | null>(null);
   const [trackTranslateX, setTrackTranslateX] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const reduceMotion = usePrefersReducedMotion();
 
   const clearTimers = useCallback(() => {
     timersRef.current.forEach((id) => window.clearTimeout(id));
@@ -164,13 +175,35 @@ export default function Coaches() {
 
   const bioVisible = phase === "opening_bio";
 
-  const transformTransitionStyle =
-    phase === "opening_slide" || phase === "closing_slide_back"
-      ? `transform ${D_SLIDE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
-      : "none";
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mobile = !window.matchMedia("(min-width: 768px)").matches;
+    if (mobile && bioVisible && bioCoachId) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [bioVisible, bioCoachId]);
 
-  const coachOpacityTransition = `opacity ${D_FADE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`;
-  const bioOpacityTransition = `opacity ${D_BIO_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+  const transformTransitionStyle =
+    reduceMotion || phase === "idle"
+      ? "none"
+      : phase === "opening_slide" || phase === "closing_slide_back"
+        ? `transform ${D_SLIDE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`
+        : "none";
+
+  const coachOpacityTransition = reduceMotion
+    ? "none"
+    : `opacity ${D_FADE_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+  const bioOpacityTransition = reduceMotion
+    ? "none"
+    : `opacity ${D_BIO_MS}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+
+  const isDesktopCoachLayout = () =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(min-width: 768px)").matches;
 
   const openBio = (coachId: string) => {
     if (phase !== "idle") return;
@@ -180,10 +213,23 @@ export default function Coaches() {
     if (!col || !scroll) return;
 
     const endT = scroll.scrollLeft - col.offsetLeft;
+    const desktop = isDesktopCoachLayout();
 
     clearTimers();
     setBioCoachId(coachId);
     setTrackTranslateX(0);
+
+    if (!desktop) {
+      setPhase("opening_bio");
+      return;
+    }
+
+    if (reduceMotion) {
+      setTrackTranslateX(endT);
+      setPhase("opening_bio");
+      return;
+    }
+
     setPhase("opening_slide");
 
     requestAnimationFrame(() => {
@@ -194,22 +240,31 @@ export default function Coaches() {
 
     schedule(() => {
       setPhase("opening_fade");
-    }, D_SLIDE_MS + TIMEOUT_SLACK_MS);
+    }, OPEN_PEER_FADE_AT_MS);
 
     schedule(() => {
       setPhase("opening_bio");
-    }, D_SLIDE_MS + D_FADE_MS + TIMEOUT_SLACK_MS * 2);
+    }, OPEN_BIO_AT_MS);
   };
 
   const closeBio = () => {
     if (phase !== "opening_bio") return;
 
     clearTimers();
+
+    const desktop = isDesktopCoachLayout();
+    if (reduceMotion || !desktop) {
+      setBioCoachId(null);
+      setTrackTranslateX(0);
+      setPhase("idle");
+      return;
+    }
+
     setPhase("closing_hide_bio");
 
     schedule(() => {
       setPhase("closing_fade_in");
-    }, D_BIO_MS + TIMEOUT_SLACK_MS);
+    }, CLOSE_PEERS_IN_AT_MS);
 
     schedule(() => {
       setPhase("closing_slide_back");
@@ -218,12 +273,14 @@ export default function Coaches() {
           setTrackTranslateX(0);
         });
       });
-    }, D_BIO_MS + D_FADE_MS + TIMEOUT_SLACK_MS * 2);
+    }, CLOSE_SLIDE_AT_MS);
+
+    const settleMs = CLOSE_SLIDE_AT_MS + D_SLIDE_MS + TIMEOUT_SLACK_MS * 2;
 
     schedule(() => {
       setBioCoachId(null);
       setPhase("idle");
-    }, D_BIO_MS + D_FADE_MS + D_SLIDE_MS + TIMEOUT_SLACK_MS * 3);
+    }, settleMs);
   };
 
   const busy = phase !== "idle";
@@ -237,7 +294,7 @@ export default function Coaches() {
           type="button"
           onClick={closeBio}
           disabled={!bioVisible || phase.startsWith("closing")}
-          className="absolute right-4 top-4 z-30 flex h-10 w-10 items-center justify-center font-mono text-2xl leading-none text-black transition-opacity hover:opacity-50 disabled:pointer-events-none disabled:opacity-30 md:right-6 md:top-6"
+          className="absolute right-4 top-4 z-30 hidden h-10 w-10 items-center justify-center font-mono text-2xl leading-none text-black transition-opacity hover:opacity-50 disabled:pointer-events-none disabled:opacity-30 md:right-6 md:top-6 md:flex"
           aria-label="Close coach bio"
         >
           ×
@@ -249,13 +306,15 @@ export default function Coaches() {
         className="flex flex-col px-6 [--coach-card:280px] md:[--coach-card:320px]"
       >
         <div className="relative flex flex-col">
-          <div className="relative min-h-0">
+          <div
+            className={`relative min-h-0 ${busy ? "overflow-hidden" : ""}`}
+          >
             <div
               ref={scrollRef}
               className={`min-h-0 pb-2 [&::-webkit-scrollbar]:hidden ${
                 phase === "idle"
                   ? "overflow-x-auto"
-                  : "overflow-x-hidden"
+                  : "overflow-x-hidden overflow-y-hidden"
               }`}
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
@@ -280,10 +339,14 @@ export default function Coaches() {
                         colRefs.current[index] = el;
                       }}
                       role="listitem"
-                      className={`flex w-[var(--coach-card)] flex-shrink-0 flex-col ${
-                        dimOthers ? "pointer-events-none opacity-0" : ""
+                      aria-hidden={dimOthers}
+                      className={`card-lift-hover flex w-[var(--coach-card)] flex-shrink-0 flex-col ${
+                        dimOthers ? "pointer-events-none" : ""
                       } ${selected && busy ? "relative z-20" : ""}`}
-                      style={{ transition: coachOpacityTransition }}
+                      style={{
+                        opacity: dimOthers ? 0 : 1,
+                        transition: coachOpacityTransition,
+                      }}
                     >
                       <div className="group relative aspect-square w-full overflow-hidden border border-black">
                         {!showNormal ? (
@@ -315,19 +378,20 @@ export default function Coaches() {
                           />
                         )}
                       </div>
-                      <div className="pt-3">
-                        <h3 className="mb-3 font-mono text-base font-normal text-black md:text-lg">
-                          <Proximate>{coach.name}</Proximate>
-                        </h3>
-                        <button
-                          type="button"
-                          disabled={phase !== "idle"}
-                          onClick={() => openBio(coach.id)}
-                          className="rounded-lg border-2 border-black bg-white px-4 py-2 font-mono text-xs uppercase tracking-widest text-black transition-all duration-300 hover:border-pink-primary hover:bg-pink-primary hover:text-black disabled:pointer-events-none disabled:opacity-40"
-                        >
-                          <Proximate>Read their Bio</Proximate>
-                        </button>
-                      </div>
+                      {!othersHidden || !selected ? (
+                        <div className="pt-3">
+                          <h3 className="mb-3 font-mono text-base font-normal text-black md:text-lg">
+                            <Proximate>{coach.name}</Proximate>
+                          </h3>
+                          <MagneticButton
+                            disabled={phase !== "idle"}
+                            onClick={() => openBio(coach.id)}
+                            className="rounded-lg border-2 border-black bg-white px-4 py-2 font-mono text-xs uppercase tracking-widest text-black transition-all duration-300 hover:border-pink-primary hover:bg-pink-primary hover:text-black disabled:pointer-events-none disabled:opacity-40"
+                          >
+                            <Proximate>Read their Bio</Proximate>
+                          </MagneticButton>
+                        </div>
+                      ) : null}
                     </div>
                   );
                 })}
@@ -335,28 +399,45 @@ export default function Coaches() {
             </div>
 
             {activeCoach && (
-              <div
-                className={`absolute inset-0 z-10 flex min-h-0 pl-[calc(var(--coach-card)+1.5rem)] md:pl-[calc(var(--coach-card)+1.5rem)] ${
-                  bioVisible
-                    ? "pointer-events-none opacity-100"
-                    : "pointer-events-none opacity-0"
-                }`}
-                style={{ transition: bioOpacityTransition }}
-              >
+              <div className="hidden md:contents">
+                {/* Solid white behind bio so peer card slots (and any bleed) read as one field */}
                 <div
-                  className={`flex min-h-0 min-w-0 flex-1 flex-col pr-2 pt-1 ${
-                    bioVisible ? "pointer-events-auto" : "pointer-events-none"
+                  aria-hidden
+                  className={`pointer-events-none absolute inset-y-0 right-0 z-[8] bg-white ${
+                    othersHidden ? "opacity-100" : "opacity-0"
                   }`}
+                  style={{
+                    left: "calc(var(--coach-card) + 1.5rem)",
+                    transition: coachOpacityTransition,
+                  }}
+                />
+                <div
+                  className={`absolute inset-y-0 right-0 z-10 flex min-h-0 min-w-0 flex-col ${
+                    bioVisible
+                      ? "pointer-events-none opacity-100"
+                      : "pointer-events-none opacity-0"
+                  }`}
+                  style={{
+                    left: "calc(var(--coach-card) + 1.5rem)",
+                    transition: bioOpacityTransition,
+                  }}
                 >
-                  <h2 className="mb-3 shrink-0 font-mono text-lg font-normal text-black md:text-xl">
-                    <Proximate>{activeCoach.name}</Proximate>
-                  </h2>
                   <div
-                    className={`min-h-0 flex-1 overflow-y-auto overscroll-contain pr-10 font-mono font-normal text-black ${bioFontClass(activeCoach.bio)}`}
+                    className={`flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden bg-white pr-3 pt-1 md:pr-6 ${
+                      bioVisible ? "pointer-events-auto" : "pointer-events-none"
+                    }`}
                   >
-                    <p className="whitespace-pre-line pb-4 pr-2">
-                      <Proximate>{activeCoach.bio}</Proximate>
-                    </p>
+                    <h2 className="mb-3 shrink-0 font-mono text-lg font-normal text-black md:text-xl">
+                      <Proximate>{activeCoach.name}</Proximate>
+                    </h2>
+                    <div
+                      className={`min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain font-mono font-normal text-black ${bioFontClass(activeCoach.bio)}`}
+                    >
+                      {/* Plain text: Proximate uses per-word nowrap and breaks long bio layout */}
+                      <p className="max-w-full whitespace-pre-line break-words pb-4 pr-1">
+                        {activeCoach.bio}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -377,6 +458,45 @@ export default function Coaches() {
           )}
         </div>
       </div>
+
+      {activeCoach && bioVisible ? (
+        <div
+          role="dialog"
+          aria-modal
+          aria-labelledby="coach-bio-sheet-title"
+          className="fixed inset-0 z-[10001] flex min-h-0 flex-col bg-white md:hidden"
+          style={{
+            paddingTop: "max(0.75rem, env(safe-area-inset-top))",
+            paddingBottom: "max(1rem, env(safe-area-inset-bottom))",
+            paddingLeft: "max(1rem, env(safe-area-inset-left))",
+            paddingRight: "max(1rem, env(safe-area-inset-right))",
+          }}
+        >
+          <div className="flex shrink-0 items-center justify-between gap-4 border-b border-black/15 pb-3">
+            <h2
+              id="coach-bio-sheet-title"
+              className="min-w-0 font-mono text-lg font-normal text-black"
+            >
+              <Proximate>{activeCoach.name}</Proximate>
+            </h2>
+            <button
+              type="button"
+              onClick={closeBio}
+              className="flex h-10 w-10 shrink-0 items-center justify-center font-mono text-2xl leading-none text-black transition-opacity hover:opacity-50"
+              aria-label="Close coach bio"
+            >
+              ×
+            </button>
+          </div>
+          <div
+            className={`min-h-0 flex-1 overflow-y-auto overscroll-contain pt-4 font-mono font-normal text-black ${bioFontClass(activeCoach.bio)}`}
+          >
+            <p className="max-w-full whitespace-pre-line break-words pb-4">
+              {activeCoach.bio}
+            </p>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
 import FadeIn from "./FadeIn";
+import MaskIn from "./MaskIn";
 import Proximate from "@/components/variable-proximity/Proximate";
+import StaggerList from "./StaggerList";
 
 // Placeholder products - will be replaced with Shopify data
 const products = [
@@ -65,8 +67,8 @@ export default function ShopSection() {
     const handleScroll = () => {
       if (scrollRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-        const progress = scrollLeft / (scrollWidth - clientWidth);
-        setScrollProgress(progress);
+        const max = scrollWidth - clientWidth;
+        setScrollProgress(max > 0 ? scrollLeft / max : 0);
       }
     };
 
@@ -82,9 +84,11 @@ export default function ShopSection() {
       {/* Section Header */}
       <div className="px-6 mb-8">
         <FadeIn>
-          <h2 className="text-black text-2xl md:text-3xl font-mono tracking-wide">
-            <Proximate>Join the crew</Proximate>
-          </h2>
+          <MaskIn>
+            <h2 className="text-black text-2xl md:text-3xl font-mono tracking-wide">
+              <Proximate>Join the crew</Proximate>
+            </h2>
+          </MaskIn>
         </FadeIn>
       </div>
 
@@ -94,13 +98,14 @@ export default function ShopSection() {
         className="flex gap-4 overflow-x-auto px-6 pb-4"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
+        <StaggerList as="div" className="flex gap-4" staggerMs={36} durationMs={340}>
         {products.map((product, index) => (
           <a
             key={index}
             href="https://omnia-fitness-collective.myshopify.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-shrink-0 w-[200px] md:w-[250px] group cursor-pointer"
+            className="card-lift-hover flex-shrink-0 w-[200px] md:w-[250px] group cursor-pointer rounded-sm"
           >
             {/* Badge - Above image */}
             {product.isNew && (
@@ -126,6 +131,7 @@ export default function ShopSection() {
             </p>
           </a>
         ))}
+        </StaggerList>
       </div>
 
       {/* Progress Bar */}

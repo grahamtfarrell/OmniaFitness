@@ -141,7 +141,7 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>(
           if (!el) return;
           el.style.transform = "";
           el.style.fontWeight = "";
-          el.style.opacity = "";
+          el.style.opacity = "1";
         });
         return;
       }
@@ -172,7 +172,7 @@ const VariableProximity = forwardRef<HTMLSpanElement, VariableProximityProps>(
         if (distance >= radius) {
           letterRef.style.transform = "";
           letterRef.style.fontWeight = "";
-          letterRef.style.opacity = "";
+          letterRef.style.opacity = "1";
           return;
         }
 
