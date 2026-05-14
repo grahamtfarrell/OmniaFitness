@@ -10,7 +10,7 @@ import Proximate from "@/components/variable-proximity/Proximate";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const SERVICES_BRACKET =
-  "[CrossFit, Functional Fitness, Hyrox, Personal Training, Performance Driven Results]";
+  "[CrossFit, Strength Training, Hyrox, Personal Training, Performance Driven Results]";
 
 export default function Hero() {
   const bgRef = useRef<HTMLDivElement>(null);

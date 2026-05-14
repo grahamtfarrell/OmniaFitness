@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import { useRef, useState, useEffect } from "react";
-import FadeIn from "./FadeIn";
-import MaskIn from "./MaskIn";
 import Proximate from "@/components/variable-proximity/Proximate";
 import StaggerList from "./StaggerList";
 
@@ -80,18 +78,7 @@ export default function ShopSection() {
   }, []);
 
   return (
-    <section className="bg-white py-16 md:py-24">
-      {/* Section Header */}
-      <div className="px-6 mb-8">
-        <FadeIn>
-          <MaskIn>
-            <h2 className="text-black text-2xl md:text-3xl font-mono tracking-wide">
-              <Proximate>Join the crew</Proximate>
-            </h2>
-          </MaskIn>
-        </FadeIn>
-      </div>
-
+    <section className="bg-white py-10 md:py-14">
       {/* Product Cards - Horizontal Scroll */}
       <div
         ref={scrollRef}
@@ -136,7 +123,7 @@ export default function ShopSection() {
       </div>
 
       {/* Progress Bar */}
-      <div className="mt-8 px-6">
+      <div className="mt-6 px-6">
         <div className="h-0.5 bg-black/20">
           <div 
             className="h-0.5 bg-black transition-all duration-150"

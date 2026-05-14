@@ -2,9 +2,11 @@
 
 import MagneticButton from "@/components/MagneticButton";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useBooking } from "@/context/BookingContext";
 import { NEWSLETTER_LAYOUT, useNewsletterBanner } from "@/context/NewsletterBannerContext";
 import Proximate from "@/components/variable-proximity/Proximate";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 const bookIntroBtnClass =
   "rounded-lg border border-black bg-pink-primary px-4 py-2 font-mono text-sm text-black tracking-wide transition-colors duration-300 hover:bg-transparent";
@@ -12,9 +14,21 @@ const bookIntroBtnClass =
 export default function BlendNav() {
   const { openModal } = useBooking();
   const { bannerVisible } = useNewsletterBanner();
+  const pathname = usePathname();
+  const reduceMotion = usePrefersReducedMotion();
   const navTopPx = bannerVisible
     ? NEWSLETTER_LAYOUT.navTop.withBanner
     : NEWSLETTER_LAYOUT.navTop.withoutBanner;
+
+  const handleAboutClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname !== "/") return;
+    e.preventDefault();
+    document.getElementById("why-omnia")?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+    window.history.replaceState(null, "", "#why-omnia");
+  };
 
   return (
     <>
@@ -33,7 +47,8 @@ export default function BlendNav() {
           style={{ mixBlendMode: "difference" }}
         >
           <Link
-            href="/about"
+            href="/#why-omnia"
+            onClick={handleAboutClick}
             className="text-base font-mono tracking-wide text-white transition-colors duration-300 hover:text-pink-primary"
           >
             <Proximate>[about]</Proximate>
@@ -63,7 +78,8 @@ export default function BlendNav() {
       >
         <div className="flex items-center gap-3">
           <Link
-            href="/about"
+            href="/#why-omnia"
+            onClick={handleAboutClick}
             className="mix-blend-difference text-base font-mono tracking-wide text-white transition-opacity duration-300 hover:opacity-70"
           >
             <Proximate>[about]</Proximate>

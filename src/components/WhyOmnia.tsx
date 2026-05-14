@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect } from "react";
 import FadeIn from "./FadeIn";
 import MaskIn from "./MaskIn";
 import Proximate from "@/components/variable-proximity/Proximate";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 function WhyCopy() {
   return (
@@ -23,8 +25,25 @@ function WhyCopy() {
 }
 
 export default function WhyOmnia() {
+  const reduceMotion = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.location.hash !== "#why-omnia") return;
+    const id = window.setTimeout(() => {
+      document.getElementById("why-omnia")?.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    }, 80);
+    return () => window.clearTimeout(id);
+  }, [reduceMotion]);
+
   return (
-    <section className="relative w-full min-h-[100dvh] md:h-screen md:min-h-0">
+    <section
+      id="why-omnia"
+      className="relative w-full min-h-[100dvh] md:h-screen md:min-h-0"
+    >
       <Image
         src="/fam.jpg"
         alt="Omnia family"

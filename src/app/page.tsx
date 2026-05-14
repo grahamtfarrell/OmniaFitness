@@ -3,6 +3,7 @@ import BlendLogo from "@/components/BlendLogo";
 import BlendNav from "@/components/BlendNav";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
+import Testimonials from "@/components/Testimonials";
 import Pricing from "@/components/Pricing";
 import SplitSection from "@/components/SplitSection";
 import Coaches from "@/components/Coaches";
@@ -18,6 +19,7 @@ export default function Home() {
       <Header />
       <Hero />
       <Marquee />
+      <Testimonials />
       <SplitSection />
       <Coaches />
       <WhyOmnia />

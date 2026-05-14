@@ -19,7 +19,7 @@ const gruppo = Gruppo({
 export const metadata: Metadata = {
   title: "Omnia Fitness | Show up. Be real. Get strong.",
   description:
-    "Your goals. Your lifestyle. Omnia - A CrossFit gym dedicated to helping you achieve your fitness goals.",
+    "Your goals. Your lifestyle. Omnia. A CrossFit gym dedicated to helping you achieve your fitness goals.",
 };
 
 export const viewport: Viewport = {
