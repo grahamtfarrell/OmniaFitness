@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import type { ReactNode, RefObject } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { isElementInViewport } from "@/lib/isElementInViewport";
+import { useReveal } from "@/hooks/useReveal";
 
 type MaskInProps = {
   children: ReactNode;
@@ -18,51 +12,13 @@ type MaskInProps = {
 };
 
 export default function MaskIn({ children, className = "", delay = 0 }: MaskInProps) {
-  const [on, setOn] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const { ref, revealed } = useReveal({ delay });
   const reduced = usePrefersReducedMotion();
-
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (reduced) {
-      setOn(true);
-      return;
-    }
-    if (isElementInViewport(el)) {
-      const id = window.setTimeout(() => setOn(true), delay);
-      return () => window.clearTimeout(id);
-    }
-  }, [reduced, delay]);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    let timeoutId: number | undefined;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          const ms = reduced ? 0 : delay;
-          timeoutId = window.setTimeout(() => setOn(true), ms);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0, rootMargin: "100px 0px 100px 0px" }
-    );
-
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
-    };
-  }, [delay, reduced]);
-
-  const active = reduced || on;
+  const active = revealed;
   const duration = reduced ? 0 : 650;
 
   return (
-    <div ref={ref} className={`overflow-hidden ${className}`}>
+    <div ref={ref as RefObject<HTMLDivElement>} className={`overflow-hidden ${className}`}>
       <div
         className={
           active

@@ -7,8 +7,7 @@ import Proximate from "@/components/variable-proximity/Proximate";
 import StaggerList from "./StaggerList";
 
 const tiers = [
-  { label: "Unlimited", price: "$209/month" },
-  { label: "3x/Week", price: "$189/Month" },
+  { label: "Unlimited", price: "$199/month" },
   { label: "10 Classes", price: "$185" },
   { label: "Drop Ins", price: "$30.00" },
 ];

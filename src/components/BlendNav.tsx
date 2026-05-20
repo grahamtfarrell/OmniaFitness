@@ -19,6 +19,7 @@ export default function BlendNav() {
   const navTopPx = bannerVisible
     ? NEWSLETTER_LAYOUT.navTop.withBanner
     : NEWSLETTER_LAYOUT.navTop.withoutBanner;
+  const hideBookIntro = pathname.startsWith("/policies");
 
   const handleAboutClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname !== "/") return;
@@ -53,6 +54,12 @@ export default function BlendNav() {
           >
             <Proximate>[about]</Proximate>
           </Link>
+          <Link
+            href="/blog"
+            className="text-base font-mono tracking-wide text-white transition-colors duration-300 hover:text-pink-primary"
+          >
+            <Proximate>[blog]</Proximate>
+          </Link>
           <a
             href="https://omnia-fitness-collective.myshopify.com/"
             target="_blank"
@@ -62,9 +69,11 @@ export default function BlendNav() {
             <Proximate>[shop]</Proximate>
           </a>
         </div>
-        <MagneticButton onClick={() => openModal()} className={bookIntroBtnClass}>
-          <Proximate>[book intro]</Proximate>
-        </MagneticButton>
+        {!hideBookIntro ? (
+          <MagneticButton onClick={() => openModal()} className={bookIntroBtnClass}>
+            <Proximate>[book intro]</Proximate>
+          </MagneticButton>
+        ) : null}
       </div>
 
       {/* Mobile Nav - Fixed bottom bar */}
@@ -84,6 +93,12 @@ export default function BlendNav() {
           >
             <Proximate>[about]</Proximate>
           </Link>
+          <Link
+            href="/blog"
+            className="mix-blend-difference text-base font-mono tracking-wide text-white transition-opacity duration-300 hover:opacity-70"
+          >
+            <Proximate>[blog]</Proximate>
+          </Link>
           <a
             href="https://omnia-fitness-collective.myshopify.com/"
             target="_blank"
@@ -93,9 +108,11 @@ export default function BlendNav() {
             <Proximate>[shop]</Proximate>
           </a>
         </div>
-        <MagneticButton onClick={() => openModal()} className={bookIntroBtnClass}>
-          <Proximate>[book intro]</Proximate>
-        </MagneticButton>
+        {!hideBookIntro ? (
+          <MagneticButton onClick={() => openModal()} className={bookIntroBtnClass}>
+            <Proximate>[book intro]</Proximate>
+          </MagneticButton>
+        ) : null}
       </div>
     </>
   );

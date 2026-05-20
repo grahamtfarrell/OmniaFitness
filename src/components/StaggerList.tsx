@@ -9,9 +9,8 @@ import {
   type ReactElement,
   type ReactNode,
 } from "react";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { isElementInViewport } from "@/lib/isElementInViewport";
+import { useReveal } from "@/hooks/useReveal";
 
 type StaggerListProps = {
   as?: keyof JSX.IntrinsicElements;
@@ -32,39 +31,9 @@ export default function StaggerList({
   staggerMs = 48,
   durationMs = 380,
 }: StaggerListProps) {
-  const [visible, setVisible] = useState(false);
-  const ref = useRef<HTMLElement | null>(null);
+  const { ref, revealed } = useReveal({ rootMargin: "80px 0px 120px 0px" });
   const reduced = usePrefersReducedMotion();
-
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (reduced) {
-      setVisible(true);
-      return;
-    }
-    if (isElementInViewport(el)) {
-      setVisible(true);
-    }
-  }, [reduced]);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0, rootMargin: "80px 0px 120px 0px" }
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [reduced]);
+  const visible = revealed;
 
   const transition = reduced
     ? "none"

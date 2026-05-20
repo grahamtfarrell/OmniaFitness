@@ -1,10 +1,12 @@
 "use client";
 
 import Proximate from "@/components/variable-proximity/Proximate";
+import { useWelcomeModal } from "@/context/WelcomeModalContext";
 import { useNewsletterBanner } from "@/context/NewsletterBannerContext";
 
 export default function NewsletterBar() {
   const { bannerVisible, dismissBanner } = useNewsletterBanner();
+  const { openWelcomeModal } = useWelcomeModal();
 
   if (!bannerVisible) {
     return (
@@ -29,9 +31,13 @@ export default function NewsletterBar() {
       >
         ✕
       </button>
-      <p className="text-center text-sm font-mono tracking-wide text-black md:text-base">
+      <button
+        type="button"
+        onClick={openWelcomeModal}
+        className="w-full text-center text-sm font-mono tracking-wide text-black transition-opacity hover:opacity-70 md:text-base"
+      >
         <Proximate>join our newsletter</Proximate>
-      </p>
+      </button>
     </div>
   );
 }

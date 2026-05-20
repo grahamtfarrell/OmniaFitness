@@ -44,11 +44,24 @@ const CLOSE_SLIDE_AT_MS = 85;
 
 const COACHES: Coach[] = [
   {
-    id: "ryan-b",
-    name: "Ryan B",
-    imagePink: "/coaches/ryan-b-pink.png",
-    imageNormal: "/coaches/ryan-b.png",
-    bio: `Ryan is a US Air Force veteran and long-time CrossFit enthusiast. He has been coaching for 5 years and enjoys all things outdoors. He is known to dabble in various endurance sports but always finds his way back to a barbell.`,
+    id: "julia",
+    name: "Julia Zoukhri",
+    imagePink: "/coaches/julia-pink.png",
+    imageNormal: "/coaches/julia.png",
+    bio: `Hey! I'm Julia Zoukhri (Zoo-cree). I'm originally from Somerville, Massachusetts, and moved to Denver in 2019 after completing two years of service in Benin, West Africa as a Peace Corps Volunteer in the public health sector.
+
+I found CrossFit in December 2019 and quickly fell in love with the combination of challenge, community, and growth it provided — especially during the pandemic. I joined Omnia in 2021 and started coaching in 2023. My athletic background is primarily in running and swimming but have picked up pickleball in my ripe old age of 30-something. In 2025, I trained for and completed my first marathon in Sydney, Australia, and I hope to complete all seven World Marathon Majors in my lifetime.
+
+Outside of coaching, I wear many hats, but two of my favorites are mental performance consultant and dog mom. As a mental performance consultant, I work directly with athletes — mainly CrossFit athletes and distance runners — on confidence, managing pressure, mindfulness, attentional control, and other mental skills that support both performance and wellbeing.
+
+A few additional random facts about me: I'm French and Moroccan and grew up speaking French. I earned my black belt in karate when I was 15 years old. I love cooking, hiking, traveling, and spending time with my partner and our two senior dogs.`,
+  },
+  {
+    id: "jason",
+    name: "Jason Farrar",
+    imagePink: "/coaches/jason-pink.png",
+    imageNormal: "/coaches/jason.png",
+    bio: `Growing up playing sports was a way of life - from football, baseball, and wrestling to cycling in my early 20's. Starting a business in my mid 20's eclipsed most of my time and it wasn't until my early 30s I started engaging fitness very seriously again. Working back into strength and conditioning was an intense mountain to climb but was a serious priority. I took over ownership of Omnia in 2025 and feel an immense sense of pride to keep pushing myself and our members towards their fitness goals.`,
   },
   {
     id: "arturo",
@@ -98,11 +111,22 @@ Outside the gym, she's a financial planner, a mom, and someone who's always chas
 Her mission: help you see what you're capable of — and then go beyond it.`,
   },
   {
-    id: "jess",
-    name: "Jess",
-    imagePink: "/coaches/jess-pink.png",
-    imageNormal: "/coaches/jess.png",
-    bio: `Jess started exercising for fun in 2011 and found CrossFit in 2013. That's when the fun really started. A model of persistence in the face of adversity, she once did 450 unbroken single unders but could not, at that time, figure out how to do a single double under. Now, many many (many, many, many) failures later, she loves double unders. Jess loves CrossFit because it rewards, above all else, hard work + consistency + hard work. When she's not at Omnia, she spends time with her wife and their dogs, has far too much fun being a corporate lawyer, and cheers wildly for the Denver Nuggets (and other Denver sports teams).`,
+    id: "ryan-y",
+    name: "Ryan Young",
+    imagePink: "/coaches/ryan-y-pink.png",
+    imageNormal: "/coaches/ryan-y.png",
+    bio: `My CrossFit career started after I finished playing college tennis. I needed a competitive outlet, and one of my friends convinced me to try out a class. I was instantly hooked!
+
+Before I started coaching CrossFit, I was a Strength and Conditioning Coach while in grad school at Mississippi State University. After a couple of years in the collegiate field, I took a position as a full-time CrossFit coach because I love the community aspect so much. That was back in 2016, and I haven't looked back since!
+
+I have my CSCS through the NSCA. I also have my CF-L2, and am a L1 Coach through USAW. I specialize in Olympic weightlifting, but I love all things barbell!`,
+  },
+  {
+    id: "victoria",
+    name: "Victoria Paszel",
+    imagePink: "/coaches/victoria-pink.png",
+    imageNormal: "/coaches/victoria.png",
+    bio: `Victoria is a longtime CrossFit athlete and coach who loves combining structured training with a strong sense of fun and community. She started CrossFit right after graduating high school and quickly fell in love with the sport. In 2019, she began coaching CrossFit and nutrition at CrossFit 845, later coaching at CrossFit Boston before making her home at Omnia. Professionally, she works as a sports dietitian supporting the nutrition needs of competitive athletes at every level. Victoria is passionate about helping people train hard without burning out or under-fueling. When she's coaching, her goal is to make you feel supported, capable, and confident in your body.`,
   },
 ];
 

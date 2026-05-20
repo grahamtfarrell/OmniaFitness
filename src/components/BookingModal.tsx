@@ -4,6 +4,13 @@ import { useCallback, useEffect, useState, useRef } from "react";
 import { useBooking } from "@/context/BookingContext";
 import Proximate from "@/components/variable-proximity/Proximate";
 import { CONTACT_INTEREST_OPTIONS } from "@/lib/contact-interest-options";
+import SplitFormModalShell, {
+  modalFieldClassCompact,
+  modalSubmitClassCompact,
+} from "@/components/modals/SplitFormModalShell";
+import FormConsentCheckbox from "@/components/modals/FormConsentCheckbox";
+
+const MODAL_IMAGE = "/welcome-popup-training.png";
 
 type SubmitStatus = "idle" | "loading" | "success" | "error";
 
@@ -35,7 +42,9 @@ export default function BookingModal() {
     }
     closeBookingModal();
   }, [closeBookingModal]);
+
   const [formData, setFormData] = useState<FormFields>(emptyForm);
+  const [consent, setConsent] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
   const [submitError, setSubmitError] = useState("");
   const successCloseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -61,6 +70,7 @@ export default function BookingModal() {
       setSubmitStatus("idle");
       setSubmitError("");
       setFormData(emptyForm());
+      setConsent(false);
     }
   }, [isOpen]);
 
@@ -72,6 +82,7 @@ export default function BookingModal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!consent) return;
     setSubmitStatus("loading");
     setSubmitError("");
 
@@ -106,6 +117,7 @@ export default function BookingModal() {
 
       setSubmitStatus("success");
       setFormData(emptyForm());
+      setConsent(false);
       if (successCloseTimer.current) clearTimeout(successCloseTimer.current);
       successCloseTimer.current = setTimeout(() => {
         successCloseTimer.current = null;
@@ -130,45 +142,32 @@ export default function BookingModal() {
 
   if (!isOpen) return null;
 
-  const title = "Fill out the form to get started";
-  const successBlurb = "Thanks — you're on the list. We'll be in touch soon.";
-  const idleBlurb = "We can't wait to meet you!";
-
-  const fieldClass =
-    "w-full px-4 py-3 text-sm border border-black rounded-lg font-mono text-pink-primary placeholder:text-pink-primary focus:outline-none focus:border-pink-primary disabled:opacity-50";
+  const disabled = submitStatus === "loading" || submitStatus === "success";
+  const field = modalFieldClassCompact;
 
   return (
-    <div
-      className="fixed inset-0 z-[10000] flex items-start justify-center overflow-y-auto overscroll-y-contain md:items-center"
-      style={{
-        paddingTop: "max(1rem, env(safe-area-inset-top, 0px))",
-        paddingBottom: "max(1rem, env(safe-area-inset-bottom, 0px))",
-        paddingLeft: "max(1rem, env(safe-area-inset-left, 0px))",
-        paddingRight: "max(1rem, env(safe-area-inset-right, 0px))",
-      }}
+    <SplitFormModalShell
+      imageSrc={MODAL_IMAGE}
+      imageAlt="Omnia members training during class"
+      onClose={closeModal}
+      zIndex={10000}
+      compact
     >
-      <div
-        className="absolute inset-0 bg-black/60"
-        onClick={closeModal}
-        role="presentation"
-      />
+      <div className="flex min-h-0 flex-1 flex-col gap-2">
+        <div className="shrink-0">
+          <h2 className="font-mono text-lg font-normal leading-tight text-black md:text-xl">
+            <Proximate>Book your intro</Proximate>
+          </h2>
+          <p className="mt-1 font-mono text-xs leading-snug text-black/75">
+            <Proximate>We&apos;ll reach out to schedule your free intro.</Proximate>
+          </p>
+        </div>
 
-      <div className="relative my-4 w-full max-w-md min-h-0 max-h-[min(calc(100dvh-2rem),720px)] overflow-y-auto overscroll-contain rounded-xl border border-black bg-white p-6 md:my-8 md:p-8">
-        <button
-          type="button"
-          onClick={closeModal}
-          className="absolute right-4 text-base font-light text-black transition-opacity hover:opacity-60"
-          style={{ top: "max(1rem, env(safe-area-inset-top, 0px))" }}
+        <form
+          onSubmit={handleSubmit}
+          className="flex min-h-0 flex-1 flex-col gap-2"
         >
-          <Proximate>✕</Proximate>
-        </button>
-
-        <h2 className="text-xl md:text-2xl font-mono font-normal text-black mb-6 pr-6">
-          <Proximate>{title}</Proximate>
-        </h2>
-
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <input
               type="text"
               name="firstName"
@@ -177,8 +176,8 @@ export default function BookingModal() {
               onChange={handleChange}
               required
               autoComplete="given-name"
-              disabled={submitStatus === "loading" || submitStatus === "success"}
-              className={fieldClass}
+              disabled={disabled}
+              className={field}
             />
             <input
               type="text"
@@ -188,8 +187,8 @@ export default function BookingModal() {
               onChange={handleChange}
               required
               autoComplete="family-name"
-              disabled={submitStatus === "loading" || submitStatus === "success"}
-              className={fieldClass}
+              disabled={disabled}
+              className={field}
             />
           </div>
 
@@ -201,106 +200,92 @@ export default function BookingModal() {
             onChange={handleChange}
             required
             autoComplete="email"
-            disabled={submitStatus === "loading" || submitStatus === "success"}
-            className={fieldClass}
+            disabled={disabled}
+            className={field}
           />
 
           <input
             type="tel"
             name="phone"
-            placeholder="phone number (+1…)"
+            placeholder="phone (+1…)"
             value={formData.phone}
             onChange={handleChange}
             required
             autoComplete="tel"
-            disabled={submitStatus === "loading" || submitStatus === "success"}
-            className={fieldClass}
+            disabled={disabled}
+            className={field}
           />
 
-          <div>
-            <label
-              htmlFor="interest"
-              className="mb-1 block font-mono text-xs text-black"
-            >
-              <Proximate>What brings you here?</Proximate>
-            </label>
-            <select
-              id="interest"
-              name="interest"
-              value={formData.interest}
-              onChange={handleChange}
-              required
-              disabled={submitStatus === "loading" || submitStatus === "success"}
-              className={`${fieldClass} bg-white text-black`}
-            >
-              <option value="" disabled>
-                Select one…
+          <select
+            id="interest"
+            name="interest"
+            value={formData.interest}
+            onChange={handleChange}
+            required
+            disabled={disabled}
+            aria-label="What brings you here?"
+            className={`${field} bg-white text-black`}
+          >
+            <option value="" disabled>
+              What brings you here?
+            </option>
+            {CONTACT_INTEREST_OPTIONS.map((opt) => (
+              <option key={opt} value={opt}>
+                {opt}
               </option>
-              {CONTACT_INTEREST_OPTIONS.map((opt) => (
-                <option key={opt} value={opt}>
-                  {opt}
-                </option>
-              ))}
-            </select>
-          </div>
+            ))}
+          </select>
 
-          <div>
-            <label
-              htmlFor="lifeNotes"
-              className="mb-1 block font-mono text-xs text-black leading-snug"
-            >
-              <Proximate>
-                Tell us about your life. Whats your life like and who are you?
-              </Proximate>
-            </label>
-            <textarea
-              id="lifeNotes"
-              name="lifeNotes"
-              rows={4}
-              placeholder="notes (optional)"
-              value={formData.lifeNotes}
-              onChange={handleChange}
-              disabled={submitStatus === "loading" || submitStatus === "success"}
-              className={`${fieldClass} resize-y min-h-[100px] text-black placeholder:text-pink-primary/70`}
-            />
-          </div>
+          <textarea
+            id="lifeNotes"
+            name="lifeNotes"
+            rows={2}
+            placeholder="about you (optional)"
+            value={formData.lifeNotes}
+            onChange={handleChange}
+            disabled={disabled}
+            className={`${field} min-h-[3.25rem] resize-none text-black placeholder:text-pink-primary/70`}
+          />
+
+          <FormConsentCheckbox
+            id="book-intro-consent"
+            checked={consent}
+            onChange={setConsent}
+            disabled={disabled}
+            includeSms
+            compact
+          />
 
           {submitStatus === "success" ? (
-            <p className="text-center font-mono text-black text-sm pt-3">
-              <Proximate>{successBlurb}</Proximate>
+            <p className="text-center font-mono text-xs text-black">
+              <Proximate>Thanks — we&apos;ll be in touch soon.</Proximate>
             </p>
-          ) : (
-            <p className="text-center font-mono text-black text-sm pt-3">
-              <Proximate>{idleBlurb}</Proximate>
-            </p>
-          )}
+          ) : null}
 
           {submitStatus === "error" && submitError ? (
             <p
-              className="text-center font-mono text-sm text-red-600 pt-1"
+              className="text-center font-mono text-xs text-red-600"
               role="alert"
             >
               <Proximate>{submitError}</Proximate>
             </p>
           ) : null}
 
-          <div className="flex justify-center pt-1">
-            <button
-              type="submit"
-              disabled={submitStatus === "loading" || submitStatus === "success"}
-              className="rounded-lg border border-black bg-pink-primary px-6 py-3 font-mono text-black text-sm tracking-wide transition-colors duration-300 hover:bg-transparent disabled:opacity-50 disabled:pointer-events-none"
-            >
-              <Proximate>
-                {submitStatus === "loading"
-                  ? "Submitting…"
-                  : submitStatus === "success"
-                    ? "Sent"
-                    : "Submit"}
-              </Proximate>
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={disabled || !consent}
+            className={modalSubmitClassCompact}
+          >
+            <Proximate>
+              {submitStatus === "loading"
+                ? "Submitting…"
+                : submitStatus === "success"
+                  ? "Sent"
+                  : "Book intro"}
+            </Proximate>
+          </button>
         </form>
       </div>
-    </div>
+    </SplitFormModalShell>
   );
 }

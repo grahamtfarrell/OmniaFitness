@@ -5,6 +5,7 @@ import Script from "next/script";
 import "./globals.css";
 import { BookingProvider } from "@/context/BookingContext";
 import { NewsletterBannerProvider } from "@/context/NewsletterBannerContext";
+import { WelcomeModalProvider } from "@/context/WelcomeModalContext";
 import BookingModal from "@/components/BookingModal";
 import SmoothScroll from "@/components/SmoothScroll";
 import WelcomeModal from "@/components/WelcomeModal";
@@ -48,15 +49,17 @@ export default function RootLayout({
           strategy="afterInteractive"
         />
         <BookingProvider>
-          <VariableProximityRoot>
-            <NewsletterBannerProvider>
-              {children}
-              <Suspense fallback={null}>
-                <WelcomeModal />
-              </Suspense>
-              <BookingModal />
-            </NewsletterBannerProvider>
-          </VariableProximityRoot>
+          <WelcomeModalProvider>
+            <VariableProximityRoot>
+              <NewsletterBannerProvider>
+                {children}
+                <Suspense fallback={null}>
+                  <WelcomeModal />
+                </Suspense>
+                <BookingModal />
+              </NewsletterBannerProvider>
+            </VariableProximityRoot>
+          </WelcomeModalProvider>
         </BookingProvider>
         </SmoothScroll>
       </body>
