@@ -4,12 +4,12 @@ import type { Metadata } from "next";
 import BookingButton from "@/components/BookingButton";
 import BlogShell from "@/components/blog/BlogShell";
 import BlogTagList from "@/components/blog/BlogTagList";
-import Proximate from "@/components/variable-proximity/Proximate";
 import { getCoverPublicUrl } from "@/lib/blog/cover-url";
 import { getPublishedPostBySlug, getPublishedSlugs } from "@/lib/blog/queries";
 import { tiptapJsonToHtml } from "@/lib/blog/tiptap-to-html";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 type PageProps = { params: { slug: string } };
 
@@ -45,12 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BlogPostPage({ params }: PageProps) {
-  let post;
-  try {
-    post = await getPublishedPostBySlug(params.slug);
-  } catch {
-    notFound();
-  }
+  const post = await getPublishedPostBySlug(params.slug).catch(() => null);
 
   if (!post) notFound();
 
@@ -66,6 +61,7 @@ export default async function BlogPostPage({ params }: PageProps) {
               src={coverUrl}
               alt=""
               fill
+              unoptimized
               className="object-cover"
               priority
               sizes="(max-width: 768px) 100vw, 672px"
@@ -79,17 +75,21 @@ export default async function BlogPostPage({ params }: PageProps) {
             {formatDate(post.published_at)}
           </time>
           <h1 className="mt-3 font-mono text-2xl font-normal tracking-tight text-black md:text-4xl">
-            <Proximate>{post.title}</Proximate>
+            {post.title}
           </h1>
           <div className="mt-4">
             <BlogTagList tags={post.tags} />
           </div>
         </header>
 
-        <div
-          className="blog-prose font-mono text-sm leading-relaxed text-black md:text-base"
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
+        {html ? (
+          <div
+            className="blog-prose font-mono text-sm leading-relaxed text-black md:text-base"
+            dangerouslySetInnerHTML={{ __html: html }}
+          />
+        ) : (
+          <p className="font-mono text-sm text-black/70">No content yet.</p>
+        )}
 
         <div className="mt-16 flex justify-center border-t border-black/10 pt-12">
           <BookingButton>Book an intro</BookingButton>

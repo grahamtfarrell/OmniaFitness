@@ -14,6 +14,13 @@ function getAnonKey() {
   return key;
 }
 
+/** Read-only public data (blog). Avoids cookies() so Vercel serverless streams reliably. */
+export function createPublicReadClient() {
+  return createClient(getSupabaseUrl(), getAnonKey(), {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
+
 export function createAnonServerClient() {
   const cookieStore = cookies();
   return createServerClient(getSupabaseUrl(), getAnonKey(), {

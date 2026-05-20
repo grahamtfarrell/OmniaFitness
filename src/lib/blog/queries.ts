@@ -1,8 +1,11 @@
-import { createAnonServerClient, createServiceRoleClient } from "@/lib/supabase/server";
+import {
+  createPublicReadClient,
+  createServiceRoleClient,
+} from "@/lib/supabase/server";
 import type { BlogPost, BlogPostStatus } from "@/lib/blog/types";
 
 export async function getPublishedPosts(): Promise<BlogPost[]> {
-  const supabase = createAnonServerClient();
+  const supabase = createPublicReadClient();
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*")
@@ -13,11 +16,14 @@ export async function getPublishedPosts(): Promise<BlogPost[]> {
 }
 
 export async function getPublishedPostBySlug(slug: string): Promise<BlogPost | null> {
-  const supabase = createAnonServerClient();
+  const supabase = createPublicReadClient();
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*")
     .eq("slug", slug)
+    .eq("status", "published")
+    .not("published_at", "is", null)
+    .lte("published_at", new Date().toISOString())
     .maybeSingle();
 
   if (error) throw error;
