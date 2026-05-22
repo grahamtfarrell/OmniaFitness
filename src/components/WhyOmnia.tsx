@@ -12,7 +12,7 @@ function WhyCopy() {
     <MaskIn>
       <p className="mb-6 font-mono text-base leading-relaxed text-white md:text-lg">
         <Proximate>
-          {`Since 2013, Omnia has been a place where we push ourselves to become someone we didn't know was possible before. A community training together and showing up for each other.`}
+          {`Since 2013, Omnia has been a place where we push ourselves to become someone we didn't know was possible. A community training together and showing up for each other.`}
         </Proximate>
       </p>
       <p className="font-mono text-base leading-relaxed text-white md:text-lg">

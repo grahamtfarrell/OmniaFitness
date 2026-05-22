@@ -45,7 +45,7 @@ const CLOSE_SLIDE_AT_MS = 85;
 const COACHES: Coach[] = [
   {
     id: "julia",
-    name: "Julia Zoukhri",
+    name: "Julia",
     imagePink: "/coaches/julia-pink.png",
     imageNormal: "/coaches/julia.png",
     bio: `Hey! I'm Julia Zoukhri (Zoo-cree). I'm originally from Somerville, Massachusetts, and moved to Denver in 2019 after completing two years of service in Benin, West Africa as a Peace Corps Volunteer in the public health sector.
@@ -58,7 +58,7 @@ A few additional random facts about me: I'm French and Moroccan and grew up spea
   },
   {
     id: "jason",
-    name: "Jason Farrar",
+    name: "Jason",
     imagePink: "/coaches/jason-pink.png",
     imageNormal: "/coaches/jason.png",
     bio: `Growing up playing sports was a way of life - from football, baseball, and wrestling to cycling in my early 20's. Starting a business in my mid 20's eclipsed most of my time and it wasn't until my early 30s I started engaging fitness very seriously again. Working back into strength and conditioning was an intense mountain to climb but was a serious priority. I took over ownership of Omnia in 2025 and feel an immense sense of pride to keep pushing myself and our members towards their fitness goals.`,
@@ -112,7 +112,7 @@ Her mission: help you see what you're capable of — and then go beyond it.`,
   },
   {
     id: "ryan-y",
-    name: "Ryan Young",
+    name: "Ryan",
     imagePink: "/coaches/ryan-y-pink.png",
     imageNormal: "/coaches/ryan-y.png",
     bio: `My CrossFit career started after I finished playing college tennis. I needed a competitive outlet, and one of my friends convinced me to try out a class. I was instantly hooked!
@@ -123,10 +123,45 @@ I have my CSCS through the NSCA. I also have my CF-L2, and am a L1 Coach through
   },
   {
     id: "victoria",
-    name: "Victoria Paszel",
+    name: "Victoria",
     imagePink: "/coaches/victoria-pink.png",
     imageNormal: "/coaches/victoria.png",
     bio: `Victoria is a longtime CrossFit athlete and coach who loves combining structured training with a strong sense of fun and community. She started CrossFit right after graduating high school and quickly fell in love with the sport. In 2019, she began coaching CrossFit and nutrition at CrossFit 845, later coaching at CrossFit Boston before making her home at Omnia. Professionally, she works as a sports dietitian supporting the nutrition needs of competitive athletes at every level. Victoria is passionate about helping people train hard without burning out or under-fueling. When she's coaching, her goal is to make you feel supported, capable, and confident in your body.`,
+  },
+  {
+    id: "chris",
+    name: "Chris",
+    imagePink: "/coaches/chris-pink.png",
+    imageNormal: "/coaches/chris.png",
+    bio: `As a lifelong athlete, Chris has always been drawn to competition, teamwork, and pushing limits. He played soccer throughout high school and college where he developed a deep appreciation for discipline, camaraderie, and the drive to constantly improve.
+
+About seven years ago, he was introduced to CrossFit and immediately fell in love with the challenge, intensity, and community that define the sport. After a few years he was able to connect the CrossFit activity with his passion for training which started his coaching career.
+
+Outside the gym, Chris works full-time as a firefighter, a career that demands resilience, teamwork, and a commitment to helping others succeed under pressure. That same mindset carries into his coaching. He invested in each athlete's journey and believes that progress comes from focused coaching, intentional training, and individualized attention.
+
+When Chris is not coaching or on shift at the firehouse, you can usually find him outdoors rafting, fishing, or camping, or cheering on one of the many local sports teams.`,
+  },
+  {
+    id: "lexie",
+    name: "Lexie",
+    imagePink: "/coaches/lexie-pink.png",
+    imageNormal: "/coaches/lexie.png",
+    bio: `Hi, I'm Lexie. Originally from Texas, living in Colorado, and I've been coaching CrossFit since 2019.
+
+I'm also a pre-med student who loves sports, whether I'm in the gym, studying, or trying (and humbly failing) to master other sports.`,
+  },
+  {
+    id: "rachel",
+    name: "Rachel",
+    imagePink: "/coaches/rachel-pink.png",
+    imageNormal: "/coaches/rachel.png",
+    bio: `Growing up a three-sport athlete, Rachel played club volleyball at Michigan State - but never touched a weight until an exercise physiology professor tested her fitness in undergrad and told her she was strong. That planted the seed, bringing her to CrossFit in 2014 at the start of graduate school and was hooked fast, competing at Regionals with a team in 2015 and 2016 out of Grand Rapids, Michigan.
+
+With a background in Kinesiology and a Master's in Occupational Therapy, Rachel has always seen fitness and function as two sides of the same coin — a philosophy that led her to coach adaptive athletes at CrossFit Watchtower, working with people living with MS and other neurological diagnoses. It's a population she remains passionate about and hopes to return to someday.
+
+She packed her car in 2021 with two days of Colorado experience under her belt, craving a new chapter. She wasn't planning on competing again - but she found Omnia and jumped into the mix.
+
+Nearly 11 years of coaching across Orangetheory, CrossFit, and her own outdoor self-run programs through Covid have shaped one core belief: your time here should be worth it. Rachel is a movement nerd who loves clean technique, purposeful progressions, and helping people surprise themselves. Outside the gym she runs R.Elery Coaching, co-founded TailoredHealth, and can be found on the beach volleyball court or borrowing everyone's dogs.`,
   },
 ];
 
