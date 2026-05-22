@@ -188,6 +188,9 @@ export async function subscribeProfileToList(
                     marketing: {
                       consent: "SUBSCRIBED",
                     },
+                    transactional: {
+                      consent: "SUBSCRIBED",
+                    },
                   },
                 },
               },
