@@ -260,7 +260,7 @@ export default function WelcomeModal() {
       <button
         type="button"
         onClick={() => close()}
-        className="mt-5 w-full text-center font-mono text-sm font-normal text-black underline underline-offset-2 transition-opacity hover:opacity-60"
+        className="mt-5 w-full touch-manipulation text-center font-mono text-sm font-normal text-black underline underline-offset-2 transition-opacity hover:opacity-60"
       >
         <Proximate>No, I don&apos;t want updates</Proximate>
       </button>

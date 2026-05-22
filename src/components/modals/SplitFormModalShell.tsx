@@ -1,7 +1,8 @@
 "use client";
 
-import type { ReactNode } from "react";
-import Proximate from "@/components/variable-proximity/Proximate";
+import { useEffect, type ReactNode } from "react";
+import { createPortal } from "react-dom";
+import { useLenis } from "lenis/react";
 
 type SplitFormModalShellProps = {
   imageSrc: string;
@@ -21,7 +22,16 @@ export default function SplitFormModalShell({
   compact = false,
   children,
 }: SplitFormModalShellProps) {
-  return (
+  const lenis = useLenis();
+
+  useEffect(() => {
+    lenis?.stop();
+    return () => {
+      lenis?.start();
+    };
+  }, [lenis]);
+
+  const modal = (
     <div
       className="fixed inset-0 flex items-start justify-center overflow-y-auto overscroll-y-contain md:items-center"
       style={{
@@ -31,15 +41,18 @@ export default function SplitFormModalShell({
         paddingLeft: "max(1rem, env(safe-area-inset-left, 0px))",
         paddingRight: "max(1rem, env(safe-area-inset-right, 0px))",
       }}
+      data-lenis-prevent
+      data-lenis-prevent-touch
     >
-      <div
-        className="absolute inset-0 bg-black/70"
+      <button
+        type="button"
+        className="absolute inset-0 z-0 cursor-default bg-black/70"
         onClick={onClose}
-        role="presentation"
+        aria-label="Close dialog"
       />
 
       <div
-        className={`relative my-4 flex w-full min-h-0 max-w-4xl flex-col overflow-hidden rounded-xl border-2 border-black bg-white shadow-none md:my-6 md:flex-row ${
+        className={`relative z-10 my-4 flex w-full min-h-0 max-w-4xl flex-col overflow-hidden rounded-xl border-2 border-black bg-white shadow-none md:my-6 md:flex-row ${
           compact
             ? "md:max-h-[min(94dvh,700px)]"
             : "md:max-h-[min(90dvh,640px)]"
@@ -69,11 +82,11 @@ export default function SplitFormModalShell({
           <button
             type="button"
             onClick={onClose}
-            className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-black bg-white font-mono text-lg font-light leading-none text-black transition-opacity hover:opacity-70"
-            style={{ top: "max(1rem, env(safe-area-inset-top, 0px))" }}
+            className="absolute right-3 top-3 z-20 flex min-h-11 min-w-11 touch-manipulation items-center justify-center rounded-full border border-black bg-white font-mono text-xl font-light leading-none text-black transition-opacity hover:opacity-70 md:right-4 md:top-4"
+            style={{ top: "max(0.75rem, env(safe-area-inset-top, 0px))" }}
             aria-label="Close"
           >
-            <Proximate>✕</Proximate>
+            ✕
           </button>
 
           <div
@@ -89,6 +102,10 @@ export default function SplitFormModalShell({
       </div>
     </div>
   );
+
+  if (typeof document === "undefined") return modal;
+
+  return createPortal(modal, document.body);
 }
 
 export const modalFieldClass =

@@ -2,14 +2,18 @@ import Image from "next/image";
 import JoinNewsletterButton from "@/components/JoinNewsletterButton";
 import Proximate from "@/components/variable-proximity/Proximate";
 
-const MAPS_URL =
-  "https://www.google.com/maps/search/?api=1&query=901+S+Jason+St+%23C+Denver+CO+80223";
+const HOURS_LOCATION_URL = "https://share.google/LAmmsb04tlUn0Ighj";
 
 const footerLinks = [
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "mailto:jason@omniafitness.com" },
-  { label: "Hours", href: MAPS_URL },
-  { label: "Location", href: MAPS_URL },
+  { label: "Blog", href: "/blog", external: false },
+  { label: "Contact", href: "mailto:jason@omniafitness.com", external: false },
+  { label: "Hours", href: HOURS_LOCATION_URL, external: true },
+  { label: "Location", href: HOURS_LOCATION_URL, external: true },
+] as const;
+
+const legalLinks = [
+  { label: "Privacy Policy", href: "/policies/privacy-policy" },
+  { label: "Terms of Service", href: "/policies/terms-of-service" },
 ] as const;
 
 const socialLinks = [
@@ -78,10 +82,13 @@ export default function Footer() {
           className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 font-mono text-[0.65rem] uppercase tracking-[0.2em] md:text-xs md:tracking-[0.22em]"
           aria-label="Footer"
         >
-          {footerLinks.map(({ label, href }) => (
+          {footerLinks.map(({ label, href, external }) => (
             <a
               key={label}
               href={href}
+              {...(external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
               className="transition-opacity hover:opacity-60"
             >
               <Proximate>{label}</Proximate>
@@ -109,6 +116,21 @@ export default function Footer() {
             </a>
           ))}
         </div>
+
+        <nav
+          className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono text-[0.6rem] uppercase tracking-[0.18em] text-pink-primary/80 md:mt-10 md:text-[0.65rem] md:tracking-[0.2em]"
+          aria-label="Legal"
+        >
+          {legalLinks.map(({ label, href }) => (
+            <a
+              key={label}
+              href={href}
+              className="transition-opacity hover:opacity-60"
+            >
+              <Proximate>{label}</Proximate>
+            </a>
+          ))}
+        </nav>
       </div>
     </footer>
   );

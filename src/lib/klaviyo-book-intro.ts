@@ -163,6 +163,7 @@ export async function subscribeProfileToList(
   listId: string,
   profileId: string,
   email: string,
+  phoneE164: string,
 ): Promise<{ ok: true } | { ok: false; status: number; body: unknown }> {
   const body = {
     data: {
@@ -176,8 +177,14 @@ export async function subscribeProfileToList(
               id: profileId,
               attributes: {
                 email,
+                phone_number: phoneE164,
                 subscriptions: {
                   email: {
+                    marketing: {
+                      consent: "SUBSCRIBED",
+                    },
+                  },
+                  sms: {
                     marketing: {
                       consent: "SUBSCRIBED",
                     },
@@ -253,6 +260,7 @@ export async function syncIntroLeadToKlaviyo(input: {
     listId,
     profileId,
     input.email,
+    input.phoneE164,
   );
   if (!sub.ok) {
     return {
