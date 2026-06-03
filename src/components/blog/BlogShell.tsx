@@ -5,12 +5,14 @@ import Footer from "@/components/Footer";
 
 export default function BlogShell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="min-h-screen bg-white pb-[max(7rem,calc(4.5rem+env(safe-area-inset-bottom,0px)))] md:pb-0">
-      <BlendLogo />
-      <BlendNav />
-      <Header />
-      {children}
+    <>
+      <main className="min-h-screen bg-white">
+        <BlendLogo />
+        <BlendNav />
+        <Header />
+        {children}
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

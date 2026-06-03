@@ -2,13 +2,39 @@ import Image from "next/image";
 import JoinNewsletterButton from "@/components/JoinNewsletterButton";
 import Proximate from "@/components/variable-proximity/Proximate";
 
-const HOURS_LOCATION_URL = "https://share.google/LAmmsb04tlUn0Ighj";
+const LOCATION_URL = "https://share.google/LAmmsb04tlUn0Ighj";
+
+const OMNIA_EMAIL = "jason@omniafitco.com";
+const OMNIA_PHONE = "(720) 335-5611";
+const OMNIA_PHONE_TEL = "+17203355611";
 
 const footerLinks = [
   { label: "Blog", href: "/blog", external: false },
-  { label: "Contact", href: "mailto:jason@omniafitness.com", external: false },
-  { label: "Hours", href: HOURS_LOCATION_URL, external: true },
-  { label: "Location", href: HOURS_LOCATION_URL, external: true },
+  { label: "Contact", href: `mailto:${OMNIA_EMAIL}`, external: false },
+  { label: "Location", href: LOCATION_URL, external: true },
+] as const;
+
+const gymHours = [
+  {
+    day: "M–F",
+    lines: [
+      "AM Hours: 5:15, 6:15, 7:15, 9",
+      "PM: 12:00, 4:00, 5:00, 6:00",
+      "Open Gym: 10am – 12pm & 1pm – 4pm",
+    ],
+  },
+  {
+    day: "Sat",
+    lines: [
+      "9am CrossFit",
+      "10am HYROX",
+      "Open Gym: 7–11am",
+    ],
+  },
+  {
+    day: "Sun",
+    lines: ["Open Gym: 9–11am"],
+  },
 ] as const;
 
 const legalLinks = [
@@ -66,7 +92,7 @@ const socialLinks = [
 
 export default function Footer() {
   return (
-    <footer className="bg-black px-6 py-16 text-pink-primary md:py-20">
+    <footer className="bg-black px-6 pt-16 pb-[max(7rem,calc(4.5rem+env(safe-area-inset-bottom,0px)))] text-pink-primary md:py-20">
       <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
         <div className="flex justify-center">
           <Image
@@ -76,6 +102,29 @@ export default function Footer() {
             height={48}
             className="h-7 w-auto opacity-95 md:h-8"
           />
+        </div>
+
+        <div
+          className="mt-10 w-full max-w-sm font-mono text-xs leading-relaxed text-pink-primary/90 md:max-w-md md:text-sm"
+          aria-label="Gym hours"
+        >
+          <p className="mb-6 text-[0.65rem] uppercase tracking-[0.2em] text-pink-primary md:text-xs md:tracking-[0.22em]">
+            <Proximate>Hours</Proximate>
+          </p>
+          <div className="space-y-5 text-center">
+            {gymHours.map(({ day, lines }) => (
+              <div key={day}>
+                <p className="mb-1 font-normal uppercase tracking-wide text-pink-primary">
+                  {day}
+                </p>
+                <ul className="space-y-0.5 text-pink-primary/90">
+                  {lines.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
         <nav
@@ -131,6 +180,28 @@ export default function Footer() {
             </a>
           ))}
         </nav>
+
+        <div className="mt-10 w-full max-w-sm border-t border-pink-primary/25 pt-10 font-mono text-xs leading-relaxed text-pink-primary/90 md:mt-12 md:max-w-md md:text-sm">
+          <p className="mb-4 text-[0.65rem] uppercase tracking-[0.2em] text-pink-primary md:text-xs md:tracking-[0.22em]">
+            <Proximate>Contact</Proximate>
+          </p>
+          <p>
+            <a
+              href={`mailto:${OMNIA_EMAIL}`}
+              className="transition-opacity hover:opacity-60"
+            >
+              {OMNIA_EMAIL}
+            </a>
+          </p>
+          <p className="mt-1">
+            <a
+              href={`tel:${OMNIA_PHONE_TEL}`}
+              className="transition-opacity hover:opacity-60"
+            >
+              {OMNIA_PHONE}
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );

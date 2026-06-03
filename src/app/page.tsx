@@ -13,19 +13,21 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-white pb-[max(7rem,calc(4.5rem+env(safe-area-inset-bottom,0px)))] md:pb-0">
-      <BlendLogo />
-      <BlendNav />
-      <Header />
-      <Hero />
-      <Marquee />
-      <Testimonials />
-      <SplitSection />
-      <Coaches />
-      <WhyOmnia />
-      <ShopSection />
-      <Pricing />
+    <>
+      <main className="bg-white">
+        <BlendLogo />
+        <BlendNav />
+        <Header />
+        <Hero />
+        <Marquee />
+        <Testimonials />
+        <SplitSection />
+        <Coaches />
+        <WhyOmnia />
+        <ShopSection />
+        <Pricing />
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

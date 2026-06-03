@@ -6,11 +6,12 @@ import Proximate from "@/components/variable-proximity/Proximate";
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-white pb-[max(7rem,calc(4.5rem+env(safe-area-inset-bottom,0px)))] md:pb-0">
-      <BlendLogo />
-      <BlendNav />
-      <Header />
-      <article className="mx-auto max-w-xl px-6 pb-24 pt-32 md:pt-40">
+    <>
+      <main className="min-h-screen bg-white">
+        <BlendLogo />
+        <BlendNav />
+        <Header />
+        <article className="mx-auto max-w-xl px-6 pb-24 pt-32 md:pt-40">
         <h1 className="mb-8 font-mono text-2xl font-normal tracking-tight text-black md:text-3xl">
           <Proximate>About Omnia</Proximate>
         </h1>
@@ -24,15 +25,23 @@ export default function AboutPage() {
         <p className="font-mono text-sm leading-relaxed text-black md:text-base">
           Questions? Email{" "}
           <a
-            href="mailto:jason@omniafitness.com"
+            href="mailto:jason@omniafitco.com"
             className="underline decoration-black/30 underline-offset-2 hover:opacity-70"
           >
-            jason@omniafitness.com
+            jason@omniafitco.com
+          </a>{" "}
+          or call{" "}
+          <a
+            href="tel:+17203355611"
+            className="underline decoration-black/30 underline-offset-2 hover:opacity-70"
+          >
+            (720) 335-5611
           </a>
           .
         </p>
-      </article>
+        </article>
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

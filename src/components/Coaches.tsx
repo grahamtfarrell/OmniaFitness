@@ -42,7 +42,22 @@ const CLOSE_PEERS_IN_AT_MS = 55;
 /** Close: start slide-back before bio-out fully finishes. */
 const CLOSE_SLIDE_AT_MS = 85;
 
-const COACHES: Coach[] = [
+const COACH_ORDER = [
+  "marykay",
+  "ryan-y",
+  "jason",
+  "julia",
+  "arturo",
+  "dan",
+  "jake",
+  "kat",
+  "victoria",
+  "chris",
+  "lexie",
+  "rachel",
+] as const;
+
+const COACHES_UNSORTED: Coach[] = [
   {
     id: "julia",
     name: "Julia",
@@ -164,6 +179,10 @@ She packed her car in 2021 with two days of Colorado experience under her belt, 
 Nearly 11 years of coaching across Orangetheory, CrossFit, and her own outdoor self-run programs through Covid have shaped one core belief: your time here should be worth it. Rachel is a movement nerd who loves clean technique, purposeful progressions, and helping people surprise themselves. Outside the gym she runs R.Elery Coaching, co-founded TailoredHealth, and can be found on the beach volleyball court or borrowing everyone's dogs.`,
   },
 ];
+
+const COACHES: Coach[] = COACH_ORDER.map(
+  (id) => COACHES_UNSORTED.find((c) => c.id === id)!
+);
 
 function bioFontClass(bio: string) {
   const n = bio.length;

@@ -20,6 +20,7 @@ export default function BlendNav() {
     ? NEWSLETTER_LAYOUT.navTop.withBanner
     : NEWSLETTER_LAYOUT.navTop.withoutBanner;
   const hideBookIntro = pathname.startsWith("/policies");
+  const isBlog = pathname.startsWith("/blog");
 
   const handleAboutClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname !== "/") return;
@@ -43,32 +44,41 @@ export default function BlendNav() {
           transition: "top 0.45s cubic-bezier(0.32, 0.72, 0, 1)",
         }}
       >
-        <div
-          className="flex items-center gap-3"
-          style={{ mixBlendMode: "difference" }}
-        >
+        {isBlog ? (
           <Link
-            href="/#why-omnia"
-            onClick={handleAboutClick}
-            className="text-base font-mono tracking-wide text-white transition-colors duration-300 hover:text-pink-primary"
+            href="/"
+            className="text-base font-mono tracking-wide text-black transition-colors duration-300 hover:text-pink-primary"
           >
-            <Proximate>[about]</Proximate>
+            <Proximate>[home]</Proximate>
           </Link>
-          <Link
-            href="/blog"
-            className="text-base font-mono tracking-wide text-white transition-colors duration-300 hover:text-pink-primary"
+        ) : (
+          <div
+            className="flex items-center gap-3"
+            style={{ mixBlendMode: "difference" }}
           >
-            <Proximate>[blog]</Proximate>
-          </Link>
-          <a
-            href="https://omnia-fitness-collective.myshopify.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-base font-mono tracking-wide text-white transition-colors duration-300 hover:text-pink-primary"
-          >
-            <Proximate>[shop]</Proximate>
-          </a>
-        </div>
+            <Link
+              href="/#why-omnia"
+              onClick={handleAboutClick}
+              className="text-base font-mono tracking-wide text-white transition-colors duration-300 hover:text-pink-primary"
+            >
+              <Proximate>[about]</Proximate>
+            </Link>
+            <Link
+              href="/blog"
+              className="text-base font-mono tracking-wide text-white transition-colors duration-300 hover:text-pink-primary"
+            >
+              <Proximate>[blog]</Proximate>
+            </Link>
+            <a
+              href="https://omnia-fitness-collective.myshopify.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-base font-mono tracking-wide text-white transition-colors duration-300 hover:text-pink-primary"
+            >
+              <Proximate>[shop]</Proximate>
+            </a>
+          </div>
+        )}
         {!hideBookIntro ? (
           <MagneticButton onClick={() => openModal()} className={bookIntroBtnClass}>
             <Proximate>[book intro]</Proximate>
@@ -85,29 +95,38 @@ export default function BlendNav() {
           bottom: "max(1rem, env(safe-area-inset-bottom, 0px))",
         }}
       >
-        <div className="flex items-center gap-3">
+        {isBlog ? (
           <Link
-            href="/#why-omnia"
-            onClick={handleAboutClick}
-            className="mix-blend-difference text-base font-mono tracking-wide text-white transition-opacity duration-300 hover:opacity-70"
+            href="/"
+            className="text-base font-mono tracking-wide text-black transition-opacity duration-300 hover:opacity-70"
           >
-            <Proximate>[about]</Proximate>
+            <Proximate>[home]</Proximate>
           </Link>
-          <Link
-            href="/blog"
-            className="mix-blend-difference text-base font-mono tracking-wide text-white transition-opacity duration-300 hover:opacity-70"
-          >
-            <Proximate>[blog]</Proximate>
-          </Link>
-          <a
-            href="https://omnia-fitness-collective.myshopify.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mix-blend-difference text-base font-mono tracking-wide text-white transition-opacity duration-300 hover:opacity-70"
-          >
-            <Proximate>[shop]</Proximate>
-          </a>
-        </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <Link
+              href="/#why-omnia"
+              onClick={handleAboutClick}
+              className="mix-blend-difference text-base font-mono tracking-wide text-white transition-opacity duration-300 hover:opacity-70"
+            >
+              <Proximate>[about]</Proximate>
+            </Link>
+            <Link
+              href="/blog"
+              className="mix-blend-difference text-base font-mono tracking-wide text-white transition-opacity duration-300 hover:opacity-70"
+            >
+              <Proximate>[blog]</Proximate>
+            </Link>
+            <a
+              href="https://omnia-fitness-collective.myshopify.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mix-blend-difference text-base font-mono tracking-wide text-white transition-opacity duration-300 hover:opacity-70"
+            >
+              <Proximate>[shop]</Proximate>
+            </a>
+          </div>
+        )}
         {!hideBookIntro ? (
           <MagneticButton onClick={() => openModal()} className={bookIntroBtnClass}>
             <Proximate>[book intro]</Proximate>

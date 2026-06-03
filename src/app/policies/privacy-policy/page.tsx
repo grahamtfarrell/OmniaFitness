@@ -16,7 +16,8 @@ const OMNIA_ADDRESS = "901 S Jason Street, Unit C, Denver, CO 80223";
 
 export default function PrivacyPolicyPage() {
   return (
-    <main className="min-h-screen bg-white pb-[max(7rem,calc(4.5rem+env(safe-area-inset-bottom,0px)))] md:pb-0">
+    <>
+      <main className="min-h-screen bg-white">
       <BlendLogo />
       <BlendNav />
       <Header />
@@ -255,7 +256,8 @@ export default function PrivacyPolicyPage() {
           </section>
         </div>
       </article>
+      </main>
       <Footer />
-    </main>
+    </>
   );
 }

@@ -115,7 +115,7 @@ export default function ShopSection() {
 
             {/* Product Price */}
             <p className="text-black text-sm font-mono">
-              <Proximate>{`$ ${product.price.toFixed(2)}`}</Proximate>
+              <Proximate>coming soon</Proximate>
             </p>
           </a>
         ))}
