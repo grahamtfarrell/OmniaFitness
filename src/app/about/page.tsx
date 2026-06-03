@@ -25,10 +25,10 @@ export default function AboutPage() {
         <p className="font-mono text-sm leading-relaxed text-black md:text-base">
           Questions? Email{" "}
           <a
-            href="mailto:jason@omniafitco.com"
+            href="mailto:info@omniafitco.com"
             className="underline decoration-black/30 underline-offset-2 hover:opacity-70"
           >
-            jason@omniafitco.com
+            info@omniafitco.com
           </a>{" "}
           or call{" "}
           <a

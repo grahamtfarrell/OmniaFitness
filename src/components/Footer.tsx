@@ -4,7 +4,7 @@ import Proximate from "@/components/variable-proximity/Proximate";
 
 const LOCATION_URL = "https://share.google/LAmmsb04tlUn0Ighj";
 
-const OMNIA_EMAIL = "jason@omniafitco.com";
+const OMNIA_EMAIL = "info@omniafitco.com";
 const OMNIA_PHONE = "(720) 335-5611";
 const OMNIA_PHONE_TEL = "+17203355611";
 
