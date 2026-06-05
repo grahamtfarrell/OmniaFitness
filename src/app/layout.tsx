@@ -17,10 +17,40 @@ const gruppo = Gruppo({
   variable: "--font-gruppo",
 });
 
+const SITE_NAME = "Omnia Fitness Collective";
+const SITE_URL = "https://omniafitco.com";
+const SITE_DESCRIPTION =
+  "Your goals. Your lifestyle. Omnia. A CrossFit gym dedicated to helping you achieve your fitness goals.";
+const SHARE_IMAGE = {
+  url: "/bottom.jpg",
+  width: 2500,
+  height: 1184,
+  alt: "Omnia Fitness Collective gym in Denver",
+};
+
 export const metadata: Metadata = {
-  title: "Omnia Fitness | Show up. Be real. Get strong.",
-  description:
-    "Your goals. Your lifestyle. Omnia. A CrossFit gym dedicated to helping you achieve your fitness goals.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: `${SITE_NAME} | Show up. Be real. Get strong.`,
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: `${SITE_NAME} | Show up. Be real. Get strong.`,
+    description: SITE_DESCRIPTION,
+    images: [SHARE_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${SITE_NAME} | Show up. Be real. Get strong.`,
+    description: SITE_DESCRIPTION,
+    images: [SHARE_IMAGE.url],
+  },
 };
 
 export const viewport: Viewport = {
@@ -32,9 +62,30 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/omnia-o.png`,
+  };
+
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: SITE_URL,
+  };
+
   return (
     <html lang="en">
       <body className={`${gruppo.variable} font-mono antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify([organizationJsonLd, websiteJsonLd]),
+          }}
+        />
         <SmoothScroll>
         <Script
           id="klaviyo-init"
