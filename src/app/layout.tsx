@@ -91,6 +91,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-W7HDMQSZ');`,
           }}
         />
+        <Script
+          id="google-gtag"
+          src="https://www.googletagmanager.com/gtag/js?id=AW-18229379592"
+          strategy="beforeInteractive"
+        />
+        <Script
+          id="google-gtag-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'AW-18229379592');`,
+          }}
+        />
       </head>
       <body className={`${gruppo.variable} font-mono antialiased`}>
         <noscript>
